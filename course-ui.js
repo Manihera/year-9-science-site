@@ -1,6 +1,6 @@
 const courseInfo = {
   nature: {
-    term: "Term 1",
+    term: "Science Skills",
     colour: "#9f171b",
     lessons: [
       ["Laboratory safety and hazards", "Hazards, risks, safety symbols and routines that prevent harm.", "Complete a laboratory hazard check."],
@@ -25,7 +25,7 @@ const courseInfo = {
     ]
   },
   wai: {
-    term: "Term 1 and 2",
+    term: "Precious Wai",
     colour: "#166b7a",
     lessons: [
       ["The importance of water", "How water supports humans, ecosystems and life on Earth.", "Estimate where Earth's water is stored and how much is usable."],
@@ -51,7 +51,7 @@ const courseInfo = {
     ]
   },
   living: {
-    term: "Term 2 and 3",
+    term: "Living World",
     colour: "#287049",
     lessons: [
       ["Taiao and living things", "MRS C GREN and connections between living things, Ranginui and Papatūānuku.", "Decide whether examples meet the characteristics of life."],
@@ -89,7 +89,7 @@ const courseInfo = {
     ]
   },
   "space-energy": {
-    term: "Term 3",
+    term: "Space and Energy",
     colour: "#354b79",
     lessons: [
       ["The Solar System", "The Sun, planets, moons and gravity within our Solar System.", "Order the planets and compare rocky planets with giants."],
@@ -142,9 +142,11 @@ function courseHomePage() {
         ${Object.entries(units).map(([slug, unit]) => courseCard(slug, unit)).join("")}
       </div>
     </section>
-    <section class="course-section course-tools">
-      <a class="wide-link revision-link" href="#revision"><span>Revision hub</span><strong>Flip cards, quizzes, written practice and question banks</strong></a>
-      <a class="wide-link exam-link" href="#exam"><span>End-of-year exam</span><strong>Mixed revision, exam skills and a readiness checklist</strong></a>
+    <section class="course-section course-tools triple">
+      <a class="wide-link action-link" href="#practicals"><span>Science in Action</span><strong>Hands-on missions and student investigations</strong></a>
+      <a class="wide-link progress-link" href="#progress"><span>My Progress</span><strong>See what is complete and what to work on next</strong></a>
+      <a class="wide-link revision-link" href="#revision"><span>Revision Centre</span><strong>Flip cards, quizzes, written practice and question banks</strong></a>
+      <a class="wide-link exam-link" href="#exam"><span>End-of-year Exam</span><strong>Mixed revision, exam skills and a readiness checklist</strong></a>
     </section>`;
 }
 
@@ -152,7 +154,7 @@ function courseCard(slug, unit) {
   const info = courseInfo[slug];
   const done = completedLessons(slug).length;
   return `<a class="course-card" href="#learn/${slug}" style="--unit-colour:${info.colour}">
-    <span class="course-term">${info.term}</span>
+    <span class="course-term">Learning pathway</span>
     <h3>${unit.title}</h3>
     <p>${unit.intro}</p>
     <div class="course-card-meta"><span>${info.lessons.length} lessons</span><span>${done} completed</span></div>
@@ -172,15 +174,15 @@ function learningUnitPage(slug) {
   const percent = Math.round(completed.length / info.lessons.length * 100);
   return `
     <section class="learning-banner" style="--unit-colour:${info.colour}">
-      <div class="breadcrumbs"><a href="#learn">Learning</a> / ${info.term}</div>
-      <p class="eyebrow">${info.term}</p><h1>${unit.title}</h1><p>${unit.subtitle}</p>
+      <div class="breadcrumbs"><a href="#learn">Learning</a> / ${unit.title}</div>
+      <p class="eyebrow">Learn • Try • Check</p><h1>${unit.title}</h1><p>${unit.subtitle}</p>
       <div class="progress-wrap"><div><strong>${completed.length} of ${info.lessons.length} lessons complete</strong><span>${percent}%</span></div><progress max="100" value="${percent}">${percent}%</progress></div>
     </section>
     <section class="course-section lesson-layout">
       <div>
         <section class="lesson-overview">
           <span class="kicker">Lesson pathway</span><h2>What we cover</h2>
-          <p>Open each lesson to review its focus, class task and key science knowledge. Your completed lessons save on this device.</p>
+          <p>Each lesson is a short mission: learn the idea, try the task, check your understanding and record your progress.</p>
         </section>
         <div class="lesson-list">
           ${info.lessons.map((lesson,i)=>lessonPanel(slug, unit, lesson, i, completed.includes(i))).join("")}
@@ -216,15 +218,12 @@ function lessonPanel(slug, unit, lesson, index, checked) {
   const topic = unit.topics[index % unit.topics.length];
   const check = unit.bank[index % Math.max(unit.bank.length, 1)];
   return `<details class="lesson-panel" id="${slug}-lesson-${index}" ${index === 0 ? "open" : ""}>
-    <summary><span class="lesson-number">${String(index + 1).padStart(2,"0")}</span><span><small>${courseInfo[slug].term}</small><strong>${lesson[0]}</strong></span><span class="lesson-toggle">Open</span></summary>
+    <summary><span class="lesson-number">${String(index + 1).padStart(2,"0")}</span><span><small>Mission ${String(index + 1).padStart(2,"0")}</small><strong>${lesson[0]}</strong></span><span class="lesson-toggle">Open</span></summary>
     <div class="lesson-body">
-      <p class="lesson-focus">${lesson[1]}</p>
-      <h3>Key knowledge</h3>
-      <ul>${topic.points.map(point=>`<li>${point}</li>`).join("")}</ul>
-      ${topic.note ? `<div class="callout"><strong>Remember:</strong> ${topic.note}</div>` : ""}
-      <div class="lesson-task"><strong>Class learning</strong><p>${lesson[2]}</p></div>
-      ${check ? `<details class="lesson-check"><summary>Quick check: ${check[0]}</summary><p>${check[1]}</p></details>` : ""}
-      <label class="complete-check"><input type="checkbox" data-course-complete="${slug}" data-lesson="${index}" ${checked ? "checked" : ""}> Mark this lesson complete</label>
+      <section class="mission-step mission-learn"><span class="mission-label">1 • Learn</span><p class="lesson-focus">${lesson[1]}</p><h3>Key knowledge</h3><ul>${topic.points.map(point=>`<li>${point}</li>`).join("")}</ul>${topic.note ? `<div class="callout"><strong>Remember:</strong> ${topic.note}</div>` : ""}</section>
+      <section class="mission-step mission-try"><span class="mission-label">2 • Try</span><div class="lesson-task"><strong>Class mission</strong><p>${lesson[2]}</p></div></section>
+      ${check ? `<section class="mission-step mission-check"><span class="mission-label">3 • Check</span><details class="lesson-check"><summary>${check[0]}</summary><p><strong>Check your answer:</strong> ${check[1]}</p></details></section>` : ""}
+      <section class="mission-step mission-finish"><span class="mission-label">4 • Record</span><label class="complete-check"><input type="checkbox" data-course-complete="${slug}" data-lesson="${index}" ${checked ? "checked" : ""}> I completed the learning, task and check</label></section>
     </div>
   </details>`;
 }
@@ -257,19 +256,86 @@ function interactiveFor(slug) {
 
 function revisionHubPage() {
   return `<section class="page-heading"><p class="eyebrow">Revision hub</p><h1>Recall and practise</h1><p>Choose a learning area. Start with cards, then use the quiz and written questions without looking at the notes.</p></section>
-    <section class="course-section first"><div class="course-grid">${Object.entries(units).map(([slug,u])=>`<a class="course-card revision-card" href="#revision/${slug}" style="--unit-colour:${courseInfo[slug].colour}"><span class="course-term">${courseInfo[slug].term}</span><h3>${u.title}</h3><p>${u.cards.length} cards, ${u.quiz.length} quick questions, ${u.practice.length} written questions and ${u.bank.length} bank questions.</p><strong>Open revision</strong></a>`).join("")}</div></section>`;
+    <section class="course-section first"><div class="course-grid">${Object.entries(units).map(([slug,u])=>`<a class="course-card revision-card" href="#revision/${slug}" style="--unit-colour:${courseInfo[slug].colour}"><span class="course-term">Revision pathway</span><h3>${u.title}</h3><p>${u.cards.length} cards, ${u.quiz.length} quick questions, ${u.practice.length} written questions and ${u.bank.length} bank questions.</p><strong>Open revision</strong></a>`).join("")}</div></section>`;
 }
 
 function revisionUnitPage(slug) {
   const unit = units[slug];
-  return `<section class="learning-banner revision-banner" style="--unit-colour:${courseInfo[slug].colour}"><div class="breadcrumbs"><a href="#revision">Revision</a> / ${courseInfo[slug].term}</div><p class="eyebrow">Revision activities</p><h1>${unit.title}</h1><p>Recall the key kupu, check your knowledge and practise complete scientific explanations.</p></section>
+  return `<section class="learning-banner revision-banner" style="--unit-colour:${courseInfo[slug].colour}"><div class="breadcrumbs"><a href="#revision">Revision</a> / ${unit.title}</div><p class="eyebrow">Revision activities</p><h1>${unit.title}</h1><p>Recall the key kupu, check your knowledge and practise complete scientific explanations.</p></section>
     <section class="course-section revision-page">
       <nav class="revision-jumps" aria-label="Revision activities"><a href="#revision/${slug}/cards">Flip cards</a><a href="#revision/${slug}/quiz">Quick quiz</a><a href="#revision/${slug}/practice">Written practice</a><a href="#revision/${slug}/bank">Question bank</a></nav>
       <article class="learning-section" id="${slug}-cards"><span class="kicker">Kupu recall</span><h2>Flip cards</h2><p>Select a card to reveal the meaning.</p><div class="flashcards">${unit.cards.map(([q,a])=>`<button class="flashcard" type="button"><span class="question"><small>Tap to reveal</small><strong>${q}</strong></span><span class="answer"><small>Meaning</small>${a}</span></button>`).join("")}</div></article>
-      <article class="learning-section" id="${slug}-quiz"><span class="kicker">Check yourself</span><h2>Quick quiz</h2><form class="quiz" data-unit="${slug}">${unit.quiz.map((item,i)=>`<fieldset class="quiz-question"><legend><h3>${i+1}. ${item.q}</h3></legend>${item.options.map((opt,j)=>`<label class="quiz-option"><input type="radio" name="${slug}-q${i}" value="${j}"><span>${opt}</span></label>`).join("")}<div class="quiz-feedback" hidden></div></fieldset>`).join("")}<div class="quiz-actions"><button class="button" type="submit">Mark my quiz</button><span class="quiz-result" aria-live="polite"></span></div></form></article>
+      <article class="learning-section" id="${slug}-quiz"><span class="kicker">Check yourself</span><h2>Quick quiz</h2><p class="checkpoint-status">${quizStatus(slug)}</p><form class="quiz" data-unit="${slug}">${unit.quiz.map((item,i)=>`<fieldset class="quiz-question"><legend><h3>${i+1}. ${item.q}</h3></legend>${item.options.map((opt,j)=>`<label class="quiz-option"><input type="radio" name="${slug}-q${i}" value="${j}"><span>${opt}</span></label>`).join("")}<div class="quiz-feedback" hidden></div></fieldset>`).join("")}<div class="quiz-actions"><button class="button" type="submit">Mark my quiz</button><span class="quiz-result" aria-live="polite"></span></div></form></article>
       <article class="learning-section" id="${slug}-practice"><span class="kicker">Written answers</span><h2>Practice questions</h2><p>Write your answer before opening the model answer.</p><div class="practice-list">${unit.practice.map(([q,a],i)=>`<details><summary>${i+1}. ${q}</summary><p><strong>Model answer:</strong> ${a}</p></details>`).join("")}</div></article>
       <article class="learning-section" id="${slug}-bank"><span class="kicker">Full coverage</span><h2>Question bank</h2><div class="bank-grid">${unit.bank.map(([q,a],i)=>`<details><summary>${i+1}. ${q}</summary><p><strong>Answer:</strong> ${a}</p></details>`).join("")}</div></article>
     </section>`;
+}
+
+
+function practicalsPage() {
+  const practicals = [
+    ["Water-filter challenge", "Precious Wai", "Which filter design produces the clearest water?", "Plastic bottles or funnels, cloth, gravel, sand, activated charcoal, containers and prepared muddy water.", "Change the filter design. Measure clarity, filtration time and water collected. Never drink the filtered water.", "Design, test, improve and explain why the layers worked."],
+    ["Impact-crater investigation", "Space and Energy", "How does drop height affect crater diameter?", "Tray, flour, thin cocoa layer, ruler and equal-sized balls.", "Change only drop height. Keep the ball, surface and release method controlled. Measure crater diameter twice.", "Graph drop height against mean crater diameter and explain the pattern."],
+    ["Keeping it warm", "Energy", "Which material is the best thermal insulator?", "Identical cups, warm water, thermometers, timer and insulating materials.", "Keep water volume, starting temperature, cup and time controlled. Compare temperature decrease.", "Recommend an insulator using numerical evidence."],
+    ["Biodiversity at MANUKURA", "Living World", "How does biodiversity compare between two kura environments?", "Quadrat or hoop, identification guide, clipboard and tally sheet.", "Use the same quadrat size and number of samples in each location. Avoid disturbing organisms.", "Calculate species richness and explain environmental differences."],
+    ["Mystery-powder investigation", "Science Skills", "How can observations and safe tests identify unknown powders?", "Teacher-approved samples, spotting tile, water, droppers, universal indicator and goggles.", "Record appearance first, then test one property at a time with clean equipment. Follow teacher safety instructions.", "Use an evidence table to identify each sample and justify the decision."],
+    ["Design your own fair test", "Independent investigation", "What testable question can your group answer reliably?", "Equipment approved by your kaiako.", "Write an aim and hypothesis, identify variables, repeat measurements, calculate a mean and record anomalies.", "Present a graph, evidence-based conclusion and two realistic improvements."]
+  ];
+  return `<section class="page-heading practical-heading"><p class="eyebrow">Science in Action</p><h1>Practical missions</h1><p>Use skills from across the year to design, test, measure, improve and explain.</p></section>
+    <section class="course-section first">
+      <div class="mission-intro"><strong>Your practical cycle</strong><span>Question</span><span>Plan</span><span>Test</span><span>Explain</span><span>Improve</span></div>
+      <div class="practical-grid">${practicals.map(([title,area,question,equipment,method,outcome],i)=>`<details class="practical-card" ${i===0?"open":""}><summary><span class="lesson-number">${String(i+1).padStart(2,"0")}</span><span><small>${area}</small><strong>${title}</strong></span><span class="lesson-toggle">Open mission</span></summary><div class="practical-body"><h3>Investigation question</h3><p>${question}</p><h3>Equipment</h3><p>${equipment}</p><h3>Fair test and safety</h3><p>${method}</p><div class="practical-outcome"><strong>Finish line</strong><p>${outcome}</p></div></div></details>`).join("")}</div>
+      <section class="science-action-finish"><div><span class="kicker">After the missions</span><h2>Prepare for the final exam</h2><p>Use your practical evidence and science skills, then move into mixed whole-year revision.</p></div><a class="button" href="#exam">Open exam revision</a></section>
+    </section>`;
+}
+
+function bestQuiz(slug) {
+  try { return JSON.parse(localStorage.getItem(`manukura-quiz-${slug}`) || "null"); }
+  catch { return null; }
+}
+
+function quizStatus(slug) {
+  const result = bestQuiz(slug);
+  if (!result) return "No checkpoint result saved yet.";
+  const level = result.percent >= 90 ? "Mastered" : result.percent >= 70 ? "Secure" : "Developing";
+  return `Best result: <strong>${result.score}/${result.total} — ${level}</strong>`;
+}
+
+function progressLevel(slug) {
+  const completed = completedLessons(slug).length;
+  const total = courseInfo[slug].lessons.length;
+  const quiz = bestQuiz(slug);
+  if (!completed && !quiz) return {name:"Not started", className:"not-started"};
+  if (completed === total && quiz && quiz.percent >= 90) return {name:"Mastered", className:"mastered"};
+  if (completed === total && quiz && quiz.percent >= 70) return {name:"Secure", className:"secure"};
+  return {name:"Developing", className:"developing"};
+}
+
+function progressPage() {
+  const name = safeText(localStorage.getItem("manukura-student-name") || "");
+  const studentClass = safeText(localStorage.getItem("manukura-student-class") || "");
+  return `<section class="page-heading progress-heading"><p class="eyebrow">My Progress</p><h1>Your science pathway</h1><p>Use the same device so your completed missions and best quiz results remain saved.</p></section>
+    <section class="course-section first progress-page">
+      <div class="student-details"><label>Your name<input id="student-name" value="${name}" autocomplete="name"></label><label>Class<select id="student-class"><option value="">Choose class</option><option ${studentClass==="9M"?"selected":""}>9M</option><option ${studentClass==="9K"?"selected":""}>9K</option></select></label></div>
+      <div class="progress-key"><span class="status not-started">Not started</span><span class="status developing">Developing</span><span class="status secure">Secure</span><span class="status mastered">Mastered</span></div>
+      <div class="progress-grid">${Object.entries(units).map(([slug,u])=>{const done=completedLessons(slug).length,total=courseInfo[slug].lessons.length,pct=Math.round(done/total*100),quiz=bestQuiz(slug),level=progressLevel(slug);return `<article class="progress-card"><div><span class="status ${level.className}">${level.name}</span><h2>${u.title}</h2></div><p><strong>${done}/${total}</strong> learning missions completed</p><progress max="100" value="${pct}">${pct}%</progress><p>${quiz?`Best checkpoint: <strong>${quiz.score}/${quiz.total} (${quiz.percent}%)</strong>`:"Checkpoint not attempted"}</p><a class="button" href="#learn/${slug}">Continue pathway</a></article>`}).join("")}</div>
+      <section class="progress-share"><div><span class="kicker">Weekly check-in</span><h2>Share your progress</h2><p>Copy your dated summary and paste it into the Google Classroom progress assignment your kaiako provides.</p></div><div><button class="button" id="copy-progress" type="button">Copy progress summary</button><button class="button secondary-dark" id="print-progress" type="button">Print / save PDF</button><p id="copy-feedback" aria-live="polite"></p></div></section>
+      <div class="teacher-note"><strong>For kaiako:</strong> use one weekly Classroom assignment for these summaries. Formal checkpoint Forms can still collect verified school emails and scores in the master response Sheet.</div>
+    </section>`;
+}
+
+function safeText(value) {
+  return String(value).replace(/[&<>"']/g, char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
+}
+
+function progressSummary() {
+  const name = localStorage.getItem("manukura-student-name") || "Name not entered";
+  const studentClass = localStorage.getItem("manukura-student-class") || "Class not entered";
+  const lines = Object.entries(units).map(([slug,u])=>{
+    const done=completedLessons(slug).length,total=courseInfo[slug].lessons.length,quiz=bestQuiz(slug),level=progressLevel(slug).name;
+    return `${u.title}: ${done}/${total} missions; ${quiz?`checkpoint ${quiz.score}/${quiz.total}`:"checkpoint not attempted"}; ${level}`;
+  });
+  return `MANUKURA Year 9 Pūtaiao Progress\n${name} — ${studentClass}\n${new Date().toLocaleString("en-NZ")}\n\n${lines.join("\n")}`;
 }
 
 function examPage() {
@@ -350,7 +416,32 @@ function bindCourseInteractions(route, slug) {
     };
     amp.addEventListener("input",draw); freq.addEventListener("input",draw); draw();
   }
-  if (route === "revision" && slug) bindInteractions(slug);
+  if (route === "revision" && slug) {
+    bindInteractions(slug);
+    const quiz=document.querySelector(".quiz");
+    if (quiz) quiz.addEventListener("submit",()=>setTimeout(()=>{
+      const text=document.querySelector(".quiz-result")?.textContent || "";
+      const match=text.match(/(\d+)\s*\/\s*(\d+)/);
+      if (!match) return;
+      const score=Number(match[1]), total=Number(match[2]), percent=Math.round(score/total*100);
+      const previous=bestQuiz(slug);
+      if (!previous || percent >= previous.percent) localStorage.setItem(`manukura-quiz-${slug}`,JSON.stringify({score,total,percent,date:new Date().toISOString()}));
+      const status=document.querySelector(".checkpoint-status");
+      if (status) status.innerHTML=quizStatus(slug);
+    },0));
+  }
+  const nameInput=document.querySelector("#student-name");
+  const classInput=document.querySelector("#student-class");
+  if (nameInput) nameInput.addEventListener("input",()=>localStorage.setItem("manukura-student-name",nameInput.value));
+  if (classInput) classInput.addEventListener("change",()=>localStorage.setItem("manukura-student-class",classInput.value));
+  const copyButton=document.querySelector("#copy-progress");
+  if (copyButton) copyButton.addEventListener("click",async()=>{
+    const feedback=document.querySelector("#copy-feedback");
+    try { await navigator.clipboard.writeText(progressSummary()); feedback.textContent="Progress summary copied. Paste it into Google Classroom."; }
+    catch { feedback.textContent="Copy was blocked by the browser. Use Print / save PDF instead."; }
+  });
+  const printButton=document.querySelector("#print-progress");
+  if (printButton) printButton.addEventListener("click",()=>window.print());
   const build=document.querySelector("#build-exam");
   if (build) build.addEventListener("click",buildMixedExam);
   document.querySelectorAll("[data-exam-check]").forEach(box=>{
@@ -385,7 +476,7 @@ function renderCourseSite() {
   const parts=(location.hash.slice(1)||"home").split("/");
   let [route,slug,anchor]=parts;
   if (units[route]) { slug=route; route="learn"; }
-  const pages={home:courseHomePage,learn:()=>slug&&units[slug]?learningUnitPage(slug):learningHubPage(),revision:()=>slug&&units[slug]?revisionUnitPage(slug):revisionHubPage(),exam:examPage,assessment:assessmentPage};
+  const pages={home:courseHomePage,learn:()=>slug&&units[slug]?learningUnitPage(slug):learningHubPage(),practicals:practicalsPage,progress:progressPage,revision:()=>slug&&units[slug]?revisionUnitPage(slug):revisionHubPage(),exam:examPage,assessment:assessmentPage};
   const renderer=pages[route]||courseHomePage;
   document.querySelector("#main").innerHTML=renderer();
   document.querySelectorAll("#main-nav a").forEach(a=>a.toggleAttribute("aria-current",a.getAttribute("href")===`#${route}`));
