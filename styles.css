@@ -327,3 +327,62 @@ footer p { margin: .2rem; }
   .flashcard { min-height: 0; color: black; background: white; border: 1px solid #999; box-shadow: none; }
   .flashcard .answer { display: block; }
 }
+
+
+/* Mission pathways, Science in Action and progress */
+.course-tools.triple { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.action-link { background: #24543b; }
+.progress-link { background: #6a4218; }
+.mission-step { padding: 1rem 0; border-bottom: 1px solid var(--line); }
+.mission-step:last-child { border-bottom: 0; }
+.mission-label { display: inline-block; margin-bottom: .5rem; color: var(--red); font-size: .78rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.mission-step .lesson-task { margin: .25rem 0; }
+.practical-heading { background: linear-gradient(125deg, #173f2c, #111); }
+.progress-heading { background: linear-gradient(125deg, #573514, #171717); }
+.mission-intro { display: flex; flex-wrap: wrap; gap: .55rem; align-items: center; margin-bottom: 1.4rem; padding: 1rem; color: white; background: var(--black); border-left: 7px solid var(--gold); }
+.mission-intro strong { margin-right: .6rem; }
+.mission-intro span { padding: .35rem .65rem; color: var(--black); background: var(--gold); border-radius: 2rem; font-weight: 800; }
+.practical-grid { display: grid; gap: .8rem; }
+.practical-card { background: white; border-left: 6px solid #287049; box-shadow: var(--shadow); }
+.practical-card > summary { display: grid; grid-template-columns: 50px minmax(0,1fr) auto; gap: .9rem; align-items: center; padding: 1rem; cursor: pointer; list-style: none; }
+.practical-card > summary::-webkit-details-marker { display: none; }
+.practical-card summary small { display: block; color: #287049; font-weight: 800; text-transform: uppercase; }
+.practical-card summary strong { font-size: 1.05rem; }
+.practical-body { display: grid; grid-template-columns: 1fr 1fr; gap: .25rem 1.5rem; padding: .3rem 1.4rem 1.5rem 5rem; }
+.practical-body h3 { margin-bottom: 0; color: var(--red-dark); }
+.practical-body p { margin-top: .35rem; }
+.practical-outcome { grid-column: 1 / -1; padding: 1rem; background: #edf5ef; border-left: 5px solid #287049; }
+.practical-outcome p { margin-bottom: 0; }
+.science-action-finish, .progress-share { display: flex; justify-content: space-between; gap: 2rem; align-items: center; margin-top: 2.5rem; padding: 1.5rem; background: white; border-left: 7px solid var(--red); box-shadow: var(--shadow); }
+.science-action-finish h2, .progress-share h2, .progress-card h2 { margin: .25rem 0; font: 600 2.2rem/1 Teko, sans-serif; text-transform: uppercase; }
+.student-details { display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; margin-bottom: 1.2rem; padding: 1.2rem; background: white; box-shadow: var(--shadow); }
+.student-details label { color: var(--red-dark); font-weight: 800; }
+.student-details input, .student-details select { width: 100%; margin-top: .35rem; padding: .75rem; border: 2px solid var(--line); border-radius: .3rem; background: white; }
+.progress-key { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1.3rem 0; }
+.status { display: inline-block; padding: .3rem .6rem; border-radius: 2rem; font-size: .78rem; font-weight: 800; }
+.status.not-started { color: #4c4c4c; background: #e2e2e2; }
+.status.developing { color: #6e3b00; background: #ffe2aa; }
+.status.secure { color: #135337; background: #d8f0e3; }
+.status.mastered { color: white; background: #24527a; }
+.progress-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1rem; }
+.progress-card { padding: 1.3rem; background: white; border-top: 6px solid var(--gold); box-shadow: var(--shadow); }
+.progress-card > div { display: flex; justify-content: space-between; gap: 1rem; align-items: start; }
+.progress-card progress { width: 100%; height: 14px; accent-color: var(--green); }
+.progress-card .button { margin-top: .5rem; }
+.progress-share > div:last-child { min-width: 245px; }
+.secondary-dark { margin-top: .5rem; color: var(--black); background: transparent; border-color: var(--black); }
+.teacher-note { margin-top: 1rem; padding: 1rem; background: #fff3cf; border-left: 5px solid var(--gold); }
+.checkpoint-status { padding: .7rem; background: #f3eee4; border-left: 4px solid var(--gold); }
+@media (max-width: 760px) {
+  .course-tools.triple, .progress-grid, .student-details, .practical-body { grid-template-columns: 1fr; }
+  .practical-card > summary { grid-template-columns: 44px minmax(0,1fr); }
+  .practical-card .lesson-toggle { display: none; }
+  .practical-body { padding: .4rem 1rem 1.2rem; }
+  .science-action-finish, .progress-share { align-items: stretch; flex-direction: column; }
+  .progress-card > div { display: block; }
+}
+@media print {
+  .site-header, footer, .progress-share .button, .teacher-note { display: none !important; }
+  .progress-heading { padding: 1rem; color: black; background: white; }
+  .progress-card { break-inside: avoid; box-shadow: none; border: 1px solid #aaa; }
+}
