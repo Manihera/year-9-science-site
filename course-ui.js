@@ -122,6 +122,15 @@ const courseInfo = {
   }
 };
 
+// Add a published Google Forms URL beside a learning-area key when each
+// teacher-verified checkpoint is ready. Keep assessment answer keys private.
+const checkpointLinks = {
+  nature: "",
+  wai: "",
+  living: "",
+  "space-energy": ""
+};
+
 function courseHomePage() {
   return `
     <section class="course-hero">
@@ -199,6 +208,7 @@ function learningUnitPage(slug) {
           <span class="kicker">Go further</span><h2>Interactive resources</h2>
           <div class="resource-grid">${info.resources.map(resourceCard).join("")}</div>
         </section>
+        ${checkpointPanel(slug)}
         <section class="learning-section revision-strip">
           <div><span class="kicker">After learning</span><h2>Ready to revise?</h2><p>Move into recall cards, quick quizzes, written answers and the full question bank.</p></div>
           <a class="button" href="#revision/${slug}">Open ${unit.title} revision</a>
@@ -212,6 +222,14 @@ function learningUnitPage(slug) {
         <a href="#exam">End-of-year revision</a>
       </aside>
     </section>`;
+}
+
+function checkpointPanel(slug) {
+  const url = checkpointLinks[slug];
+  return `<section class="learning-section verified-checkpoint">
+    <div><span class="kicker">Teacher-verified progress</span><h2>Learning-area checkpoint</h2><p>Your lesson ticks and practice scores stay on this device. The Google Forms checkpoint collects your school email and gives your kaiako verified evidence.</p></div>
+    ${url ? `<a class="button" href="${url}" target="_blank" rel="noopener">Open verified checkpoint</a>` : `<span class="checkpoint-coming">Checkpoint link will appear here when your kaiako releases it.</span>`}
+  </section>`;
 }
 
 function lessonPanel(slug, unit, lesson, index, checked) {
@@ -274,17 +292,17 @@ function revisionUnitPage(slug) {
 
 function practicalsPage() {
   const practicals = [
-    ["Water-filter challenge", "Precious Wai", "Which filter design produces the clearest water?", "Plastic bottles or funnels, cloth, gravel, sand, activated charcoal, containers and prepared muddy water.", "Change the filter design. Measure clarity, filtration time and water collected. Never drink the filtered water.", "Design, test, improve and explain why the layers worked."],
-    ["Impact-crater investigation", "Space and Energy", "How does drop height affect crater diameter?", "Tray, flour, thin cocoa layer, ruler and equal-sized balls.", "Change only drop height. Keep the ball, surface and release method controlled. Measure crater diameter twice.", "Graph drop height against mean crater diameter and explain the pattern."],
-    ["Keeping it warm", "Energy", "Which material is the best thermal insulator?", "Identical cups, warm water, thermometers, timer and insulating materials.", "Keep water volume, starting temperature, cup and time controlled. Compare temperature decrease.", "Recommend an insulator using numerical evidence."],
-    ["Biodiversity at MANUKURA", "Living World", "How does biodiversity compare between two kura environments?", "Quadrat or hoop, identification guide, clipboard and tally sheet.", "Use the same quadrat size and number of samples in each location. Avoid disturbing organisms.", "Calculate species richness and explain environmental differences."],
-    ["Mystery-powder investigation", "Science Skills", "How can observations and safe tests identify unknown powders?", "Teacher-approved samples, spotting tile, water, droppers, universal indicator and goggles.", "Record appearance first, then test one property at a time with clean equipment. Follow teacher safety instructions.", "Use an evidence table to identify each sample and justify the decision."],
-    ["Design your own fair test", "Independent investigation", "What testable question can your group answer reliably?", "Equipment approved by your kaiako.", "Write an aim and hypothesis, identify variables, repeat measurements, calculate a mean and record anomalies.", "Present a graph, evidence-based conclusion and two realistic improvements."]
+    {title:"Water-filter challenge",area:"Precious Wai",question:"Which filter design produces the clearest water?",equipment:"Plastic bottles or funnels, cloth, gravel, sand, activated charcoal, containers and prepared muddy water.",safety:"Wear goggles, wash hands and never drink filtered water.",iv:"Filter design or layer order.",dv:"Water clarity, filtration time or volume collected.",controls:"Same starting water, volume, container and settling time.",method:"Build one design, pour through the same volume of muddy water, record the chosen measurement, repeat, then improve one feature.",results:"Use a table with filter design, trial, clarity score, time and volume collected.",graph:"A bar graph can compare mean clarity or mean filtration time for each design.",conclusion:"State which design performed best and support the claim with results.",improve:"Explain one limitation, then change a specific feature and test again.",finish:"Test two designs, record repeated results and justify the best filter."},
+    {title:"Impact-crater investigation",area:"Space and Energy",question:"How does drop height affect crater diameter?",equipment:"Tray, flour, thin cocoa layer, ruler and equal-sized balls.",safety:"Drop objects vertically into the tray and keep feet clear.",iv:"Drop height.",dv:"Crater diameter in centimetres.",controls:"Same ball, surface depth, release method and measuring method.",method:"Prepare a smooth surface, drop the ball from measured heights, measure each crater twice and repeat every height.",results:"Record height, two diameter measurements and a mean for every trial.",graph:"Draw a line graph of drop height against mean crater diameter.",conclusion:"Describe the pattern and explain it using gravitational potential and kinetic energy.",improve:"Identify inconsistent release or crater measurement and give a precise correction.",finish:"Use at least four heights and explain the trend from your graph."},
+    {title:"Keeping it warm",area:"Energy",question:"Which material is the best thermal insulator?",equipment:"Identical cups, warm water, thermometers, timer and insulating materials.",safety:"Use warm rather than boiling water and wipe spills immediately.",iv:"Insulating material.",dv:"Temperature decrease after a fixed time.",controls:"Same cup, water volume, starting temperature, material thickness and test time.",method:"Wrap each cup, add equal warm water, record starting temperature, wait the same time and record final temperature.",results:"Calculate temperature decrease for repeated trials and then find the mean.",graph:"Use a bar graph to compare mean temperature decrease. A smaller decrease means better insulation.",conclusion:"Recommend one material using numerical evidence.",improve:"Reduce heat loss through the top or improve control of starting temperature.",finish:"Compare at least three materials and defend one recommendation."},
+    {title:"Biodiversity at MANUKURA",area:"Living World",question:"How does biodiversity compare between two kura environments?",equipment:"Quadrat or hoop, identification guide, clipboard and tally sheet.",safety:"Avoid unknown organisms, traffic areas and damaged ground. Wash hands afterwards.",iv:"Sampling location.",dv:"Species richness or number of organisms found.",controls:"Same quadrat size, number of samples, sampling time and identification method.",method:"Choose two locations, place quadrats randomly, identify organisms, tally abundance and repeat equally at both sites.",results:"Record each species and abundance, then calculate richness for both locations.",graph:"Use a bar graph for species richness or grouped bars for selected species abundance.",conclusion:"Compare the locations and explain how environmental conditions may cause the difference.",improve:"Increase random samples or repeat at another time of day.",finish:"Complete equal sampling and make an evidence-based biodiversity comparison."},
+    {title:"Mystery-substance investigation",area:"Science Skills",question:"How can safe observations and tests identify unknown powders?",equipment:"Teacher-approved samples, spotting tile, water, droppers, universal indicator and goggles.",safety:"Use only teacher-approved tests. Do not taste, inhale closely or mix unknowns together.",iv:"Known or mystery substance being tested.",dv:"Observed colour, solubility and indicator response.",controls:"Same sample amount, water volume, indicator drops and clean equipment.",method:"Record appearance, test one property at a time, clean equipment between substances and compare results with known samples.",results:"Use an evidence table with every test result for each sample.",graph:"A graph is not required because most results are categorical. A comparison table is stronger.",conclusion:"Identify each mystery and cite at least two pieces of matching evidence.",improve:"Repeat unclear tests and prevent contamination with separate tools.",finish:"Identify the mysteries and justify every identification from evidence."},
+    {title:"Design your own fair test",area:"Independent investigation",question:"What testable question can your group answer reliably?",equipment:"Equipment approved by your kaiako.",safety:"Complete a risk check and gain kaiako approval before testing.",iv:"The one factor your group deliberately changes.",dv:"The quantity you measure or count.",controls:"List every factor that could otherwise affect the dependent variable.",method:"Write repeatable numbered steps, test a useful range, repeat measurements and record anomalies.",results:"Create a table with units and calculate a mean when repeats are numerical.",graph:"Choose a line graph for continuous data or a bar graph for categories.",conclusion:"Answer the question, describe the pattern and use results as evidence.",improve:"Name a limitation and explain exactly how the change improves reliability or validity.",finish:"Submit a question, approved plan, results, graph, conclusion and two improvements."}
   ];
   return `<section class="page-heading practical-heading"><p class="eyebrow">Science in Action</p><h1>Practical missions</h1><p>Use skills from across the year to design, test, measure, improve and explain.</p></section>
     <section class="course-section first">
       <div class="mission-intro"><strong>Your practical cycle</strong><span>Question</span><span>Plan</span><span>Test</span><span>Explain</span><span>Improve</span></div>
-      <div class="practical-grid">${practicals.map(([title,area,question,equipment,method,outcome],i)=>`<details class="practical-card" ${i===0?"open":""}><summary><span class="lesson-number">${String(i+1).padStart(2,"0")}</span><span><small>${area}</small><strong>${title}</strong></span><span class="lesson-toggle">Open mission</span></summary><div class="practical-body"><h3>Investigation question</h3><p>${question}</p><h3>Equipment</h3><p>${equipment}</p><h3>Fair test and safety</h3><p>${method}</p><div class="practical-outcome"><strong>Finish line</strong><p>${outcome}</p></div></div></details>`).join("")}</div>
+      <div class="practical-grid">${practicals.map((p,i)=>`<details class="practical-card" ${i===0?"open":""}><summary><span class="lesson-number">${String(i+1).padStart(2,"0")}</span><span><small>${p.area}</small><strong>${p.title}</strong></span><span class="lesson-toggle">Open mission</span></summary><div class="practical-body"><section><h3>Question</h3><p>${p.question}</p><h3>Equipment</h3><p>${p.equipment}</p><h3>Safety</h3><p>${p.safety}</p></section><section><h3>Plan</h3><p><strong>Independent variable:</strong> ${p.iv}</p><p><strong>Dependent variable:</strong> ${p.dv}</p><p><strong>Control variables:</strong> ${p.controls}</p><h3>Test</h3><p>${p.method}</p></section><section><h3>Results and graph</h3><p>${p.results}</p><p>${p.graph}</p><h3>Explain</h3><p>${p.conclusion}</p><h3>Improve</h3><p>${p.improve}</p></section><div class="practical-outcome"><strong>Clear finish line</strong><p>${p.finish}</p></div></div></details>`).join("")}</div>
       <section class="science-action-finish"><div><span class="kicker">After the missions</span><h2>Prepare for the final exam</h2><p>Use your practical evidence and science skills, then move into mixed whole-year revision.</p></div><a class="button" href="#exam">Open exam revision</a></section>
     </section>`;
 }
@@ -303,11 +321,10 @@ function quizStatus(slug) {
 
 function progressLevel(slug) {
   const completed = completedLessons(slug).length;
-  const total = courseInfo[slug].lessons.length;
   const quiz = bestQuiz(slug);
   if (!completed && !quiz) return {name:"Not started", className:"not-started"};
-  if (completed === total && quiz && quiz.percent >= 90) return {name:"Mastered", className:"mastered"};
-  if (completed === total && quiz && quiz.percent >= 70) return {name:"Secure", className:"secure"};
+  if (quiz && quiz.percent >= 90) return {name:"Mastered", className:"mastered"};
+  if (quiz && quiz.percent >= 70) return {name:"Secure", className:"secure"};
   return {name:"Developing", className:"developing"};
 }
 
@@ -317,10 +334,11 @@ function progressPage() {
   return `<section class="page-heading progress-heading"><p class="eyebrow">My Progress</p><h1>Your science pathway</h1><p>Use the same device so your completed missions and best quiz results remain saved.</p></section>
     <section class="course-section first progress-page">
       <div class="student-details"><label>Your name<input id="student-name" value="${name}" autocomplete="name"></label><label>Class<select id="student-class"><option value="">Choose class</option><option ${studentClass==="9M"?"selected":""}>9M</option><option ${studentClass==="9K"?"selected":""}>9K</option></select></label></div>
+      <div class="progress-boundary"><strong>This dashboard is your device record.</strong><p>Lesson ticks and practice scores help you manage your learning, but they are not teacher-verified results. Your kaiako verifies progress through released Google Forms checkpoints that collect your school email.</p></div>
       <div class="progress-key"><span class="status not-started">Not started</span><span class="status developing">Developing</span><span class="status secure">Secure</span><span class="status mastered">Mastered</span></div>
-      <div class="progress-grid">${Object.entries(units).map(([slug,u])=>{const done=completedLessons(slug).length,total=courseInfo[slug].lessons.length,pct=Math.round(done/total*100),quiz=bestQuiz(slug),level=progressLevel(slug);return `<article class="progress-card"><div><span class="status ${level.className}">${level.name}</span><h2>${u.title}</h2></div><p><strong>${done}/${total}</strong> learning missions completed</p><progress max="100" value="${pct}">${pct}%</progress><p>${quiz?`Best checkpoint: <strong>${quiz.score}/${quiz.total} (${quiz.percent}%)</strong>`:"Checkpoint not attempted"}</p><a class="button" href="#learn/${slug}">Continue pathway</a></article>`}).join("")}</div>
+      <div class="progress-grid">${Object.entries(units).map(([slug,u])=>{const done=completedLessons(slug).length,total=courseInfo[slug].lessons.length,pct=Math.round(done/total*100),quiz=bestQuiz(slug),level=progressLevel(slug),form=checkpointLinks[slug];return `<article class="progress-card"><div><span class="status ${level.className}">${level.name}</span><h2>${u.title}</h2></div><p><strong>${done}/${total}</strong> learning missions completed</p><progress max="100" value="${pct}">${pct}%</progress><p>${quiz?`Best practice score: <strong>${quiz.score}/${quiz.total} (${quiz.percent}%)</strong>`:"Practice checkpoint not attempted"}</p><div class="progress-card-actions"><a class="button" href="#learn/${slug}">Continue pathway</a>${form?`<a class="button secondary-dark" href="${form}" target="_blank" rel="noopener">Verified Form</a>`:""}</div></article>`}).join("")}</div>
       <section class="progress-share"><div><span class="kicker">Weekly check-in</span><h2>Share your progress</h2><p>Copy your dated summary and paste it into the Google Classroom progress assignment your kaiako provides.</p></div><div><button class="button" id="copy-progress" type="button">Copy progress summary</button><button class="button secondary-dark" id="print-progress" type="button">Print / save PDF</button><p id="copy-feedback" aria-live="polite"></p></div></section>
-      <div class="teacher-note"><strong>For kaiako:</strong> use one weekly Classroom assignment for these summaries. Formal checkpoint Forms can still collect verified school emails and scores in the master response Sheet.</div>
+      <div class="teacher-note"><strong>For kaiako:</strong> use one weekly Classroom assignment for these summaries. Add each released Google Forms URL in <code>checkpointLinks</code>. Formal Forms should collect verified school email addresses and feed one master response Sheet.</div>
     </section>`;
 }
 

@@ -348,7 +348,8 @@ footer p { margin: .2rem; }
 .practical-card > summary::-webkit-details-marker { display: none; }
 .practical-card summary small { display: block; color: #287049; font-weight: 800; text-transform: uppercase; }
 .practical-card summary strong { font-size: 1.05rem; }
-.practical-body { display: grid; grid-template-columns: 1fr 1fr; gap: .25rem 1.5rem; padding: .3rem 1.4rem 1.5rem 5rem; }
+.practical-body { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .25rem 1.5rem; padding: .3rem 1.4rem 1.5rem 5rem; }
+.practical-body section { min-width: 0; }
 .practical-body h3 { margin-bottom: 0; color: var(--red-dark); }
 .practical-body p { margin-top: .35rem; }
 .practical-outcome { grid-column: 1 / -1; padding: 1rem; background: #edf5ef; border-left: 5px solid #287049; }
@@ -373,12 +374,18 @@ footer p { margin: .2rem; }
 .secondary-dark { margin-top: .5rem; color: var(--black); background: transparent; border-color: var(--black); }
 .teacher-note { margin-top: 1rem; padding: 1rem; background: #fff3cf; border-left: 5px solid var(--gold); }
 .checkpoint-status { padding: .7rem; background: #f3eee4; border-left: 4px solid var(--gold); }
+.verified-checkpoint { display: flex; justify-content: space-between; gap: 2rem; align-items: center; border-left: 7px solid var(--gold); }
+.verified-checkpoint > div { max-width: 760px; }
+.checkpoint-coming { max-width: 310px; padding: .8rem 1rem; color: #5b470f; background: #fff3cf; border-radius: .35rem; font-weight: 800; }
+.progress-boundary { margin-bottom: 1.2rem; padding: 1rem 1.2rem; color: white; background: #24342c; border-left: 7px solid var(--gold); }
+.progress-boundary p { margin-bottom: 0; }
+.progress-card-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
 @media (max-width: 760px) {
   .course-tools.triple, .progress-grid, .student-details, .practical-body { grid-template-columns: 1fr; }
   .practical-card > summary { grid-template-columns: 44px minmax(0,1fr); }
   .practical-card .lesson-toggle { display: none; }
   .practical-body { padding: .4rem 1rem 1.2rem; }
-  .science-action-finish, .progress-share { align-items: stretch; flex-direction: column; }
+  .science-action-finish, .progress-share, .verified-checkpoint { align-items: stretch; flex-direction: column; }
   .progress-card > div { display: block; }
 }
 @media print {
