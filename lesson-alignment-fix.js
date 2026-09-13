@@ -1,136 +1,207 @@
-// Fix lesson-to-content alignment.
-// The original renderer selected unit.topics[index % unit.topics.length],
-// which caused unrelated key knowledge to repeat when a unit had more lessons
-// than broad topic blocks. This renderer matches content by meaning instead
-// and falls back to the lesson's own focus rather than showing unrelated notes.
+// MANUKURA Year 9 lesson upgrade.
+// Every lesson now owns explicit key knowledge and a lesson-specific check.
+// This replaces topic-index guessing, adds lightweight lesson visuals and micro-interactions,
+// improves progress wording, and surfaces the practicals actually taught in class.
 
 (function () {
-  const stopWords = new Set([
-    "a","an","and","the","of","in","to","for","with","on","at","from","your","our",
-    "i","ii","practical","research","science","scientific","local","why","how"
-  ]);
+  const lessonContent = {
+    "Laboratory safety and hazards": {p:["A hazard is something that can cause harm; risk is the chance that harm will occur.","Use safety symbols and teacher instructions to identify hazards before practical work begins.","Wear safety glasses, tie long hair back and keep bags and stools clear of work areas.","If an accident, spill or breakage occurs, stop and tell the kaiako immediately."],q:"What is the difference between a hazard and a risk?",a:"A hazard can cause harm. A risk is the chance that the harm will occur."},
+    "Laboratory equipment": {p:["Beakers hold, mix and heat liquids but are not designed for precise volume measurement.","Measuring cylinders measure liquid volume more accurately and should be read at eye level from the bottom of the meniscus.","Conical flasks can be swirled without spilling easily; test tubes hold small quantities for reactions or heating.","Scientific equipment diagrams use clear 2D outlines, single pencil lines and ruled label lines."],q:"Which piece of equipment should you use to measure 35 mL of water accurately?",a:"A measuring cylinder, read at eye level from the bottom of the meniscus."},
+    "Bunsen burners": {p:["The base supports the burner, the barrel directs the flame and the gas inlet connects to the hose.","The collar controls the air hole and therefore how much oxygen mixes with the gas.","Air hole closed gives a visible orange safety flame; air hole open gives a hotter blue heating flame.","Light the match first, then turn on the gas. Turn the gas off when finished."],q:"Why is the orange flame used when you are not heating?",a:"It is cooler and much easier to see, so it is the safer standby flame."},
+    "Observations and inferences": {p:["A qualitative observation describes a quality such as colour, texture or smell.","A quantitative observation includes a number and a unit, such as 24 °C or 12 cm.","An inference is an explanation based on observations plus prior scientific knowledge.","Strong scientific records separate what was directly observed from what is being inferred."],q:"A liquid is cloudy and 18 °C. Which part is quantitative?",a:"18 °C, because it contains a number and a unit."},
+    "Measurement in science": {p:["Measurements need both a number and an appropriate unit.","Use the correct instrument: balance for mass, thermometer for temperature, ruler for length and measuring cylinder for liquid volume.","Accuracy is closeness to the accepted value; precision is how close repeated measurements are to one another.","Read scales straight-on to reduce parallax error."],q:"What is the difference between accuracy and precision?",a:"Accuracy is closeness to the accepted value; precision is how close repeated measurements are to each other."},
+    "Variables and fair tests": {p:["The independent variable is the factor deliberately changed.","The dependent variable is the factor measured or observed as the result.","Control variables are kept the same so they do not affect the result.","A fair test changes one independent variable while controlling other relevant factors."],q:"When testing how water temperature affects dissolving time, what is the dependent variable?",a:"The time taken for the substance to dissolve."},
+    "Bar graphs": {p:["Bar graphs compare separate categories or discrete data.","The bars are separated because the categories do not form a continuous scale.","The independent categories go on the x-axis and the measured values go on the y-axis.","A scientific graph needs a clear title, labelled axes, units and an even numerical scale."],q:"Why should bars usually have gaps in a bar graph?",a:"Because a bar graph compares separate categories or discrete values."},
+    "Line graphs": {p:["Line graphs show relationships involving continuous data such as time, temperature or distance.","Plot the independent variable on the x-axis and the dependent variable on the y-axis.","Choose a sensible even scale that uses most of the graph area.","A line or curve of best fit shows the overall trend rather than simply joining every point dot-to-dot."],q:"Which variable normally belongs on the x-axis?",a:"The independent variable."},
+    "The scientific method": {p:["An aim states what the investigation is trying to find out.","A hypothesis is a testable prediction with a scientific reason.","A repeatable method gives clear ordered steps, including what is measured and controlled.","Results present evidence; the conclusion answers the aim using the pattern in those results."],q:"What makes a scientific method repeatable?",a:"It gives enough clear, ordered detail for another person to carry out the same investigation."},
+    "Experiments and evaluation": {p:["Repeating measurements helps identify unusual results and improves reliability.","A mean can reduce the influence of small random differences between repeats.","An anomaly is a result that does not fit the overall pattern and should be checked rather than automatically deleted.","A strong evaluation identifies limitations and gives specific improvements that increase reliability or validity."],q:"Why is ‘be more careful’ a weak improvement?",a:"It is not specific. A strong improvement explains exactly what should change and how that change improves the investigation."},
 
-  const aliases = {
-    "Laboratory safety and hazards": ["laboratory safety and equipment"],
-    "Laboratory equipment": ["laboratory safety and equipment"],
-    "Bunsen burners": ["bunsen burner parts and flames"],
-    "Observations and inferences": ["observations and measurement"],
-    "Measurement in science": ["observations and measurement"],
-    "Variables and fair tests": ["variables and fair tests"],
-    "Bar graphs": ["graphs and scientific reports"],
-    "Line graphs": ["graphs and scientific reports"],
-    "The scientific method": ["graphs and scientific reports"],
-    "Experiments and evaluation": ["reliable results and evaluation"],
-    "The importance of water": ["why wai matters"],
-    "Cultural significance of wai": ["mauri, whakapapa and te mana o te wai","why wai matters"],
-    "Manawatū water": ["manawatū waterways and human impacts","eutrophication"],
-    "Researching precious wai": ["why wai matters","mauri, whakapapa and te mana o te wai"],
-    "A local water issue": ["manawatū waterways and human impacts","eutrophication"],
-    "Solids, liquids and gases": ["particles and states of matter"],
-    "Atoms, molecules and compounds": ["atoms, molecules and compounds"],
-    "Changing states": ["changes of state"],
-    "Heating ice practical": ["changes of state"],
-    "Why wai matters research": ["why wai matters","mauri, whakapapa and te mana o te wai"],
-    "Cells I": ["cells and microscopes"],
-    "Microscopes": ["cells and microscopes"],
-    "Plant biology": ["plants and photosynthesis"],
-    "Photosynthesis starch practical": ["plants and photosynthesis"],
-    "Photosynthesis oxygen practical": ["plants and photosynthesis"],
-    "Plant reproductive anatomy": ["plant reproduction"],
-    "Flower dissection": ["plant reproduction"],
-    "Pollination": ["plant reproduction"],
-    "Aotearoa flowers": ["plant reproduction"],
-    "Seeds and germination": ["plant reproduction"],
-    "Ecosystems I": ["ecosystems, adaptations and food webs"],
-    "Aotearoa ecosystems": ["ecosystems, adaptations and food webs"],
-    "Adaptations": ["ecosystems, adaptations and food webs"],
-    "Predators and prey": ["ecosystems, adaptations and food webs"],
-    "Food chains and food webs": ["ecosystems, adaptations and food webs"],
-    "The Solar System": ["solar system"],
-    "Scale of the Solar System": ["solar system"],
-    "Solar System scale practical": ["solar system"],
-    "Astronomical cycles": ["astronomical cycles"],
-    "Solar and lunar eclipses": ["eclipses"],
-    "Forms of energy": ["energy stores","forms of energy"],
-    "Energy transfer": ["energy transfer"],
-    "Food calorimetry": ["calorimetry"],
-    "Energy sources": ["energy sources"],
-    "Efficiency and power": ["efficiency","power"],
-    "Waves": ["waves"],
-    "Sound waves": ["sound"],
-    "Light waves": ["light"],
-    "Reflection": ["reflection"],
-    "Refraction": ["refraction"],
-    "Sight": ["sight","eye"]
+    "The importance of water": {p:["Water is required for cellular reactions, transport, temperature control and the survival of organisms.","Freshwater ecosystems provide habitats and support food webs.","Only a small fraction of Earth’s water is readily available freshwater for people and ecosystems.","Water also supports communities, food production, recreation and cultural wellbeing."],q:"Why is accessible freshwater a limited resource even though Earth has lots of water?",a:"Most of Earth’s water is salty or locked in ice and groundwater, so only a small fraction is readily available freshwater."},
+    "Cultural significance of wai": {p:["Wai can be a taonga with cultural, historical and spiritual significance.","Whakapapa connects people, whenua, awa and ancestors.","Mauri describes the vitality or life-supporting condition of a water system.","Kaitiakitanga involves active responsibility to protect and restore wai for present and future generations."],q:"How are whakapapa and kaitiakitanga connected to wai?",a:"Whakapapa describes relationships with the waterway and place; kaitiakitanga is the responsibility to care for those relationships and the health of the wai."},
+    "Manawatū water": {p:["Water quality can be affected by sediment, nutrients, pathogens, rubbish and chemicals.","Nitrates and phosphates can enter waterways through runoff and waste.","Excess nutrients can cause algal blooms; decomposition then uses dissolved oxygen.","Riparian planting, improved waste systems and reducing runoff can help protect waterways."],q:"How can nutrient runoff eventually cause fish deaths?",a:"Extra nutrients cause algal growth; when algae die, decomposers use dissolved oxygen, leaving too little oxygen for fish and other organisms."},
+    "Researching precious wai": {p:["A strong investigation uses more than one reliable source and records where information came from.","Maps and monitoring data can show location, land use and changes in water quality.","Local and mātauranga knowledge can add history, relationships and observations that scientific datasets may not show alone.","Claims should be supported by evidence rather than copied statements."],q:"Why should you use more than one source when researching a waterway?",a:"Different sources provide different evidence and allow you to check whether claims are consistent and reliable."},
+    "A local water issue": {p:["A water issue should be explained as a chain of cause, evidence, effect and response.","Different groups may value a waterway differently and therefore support different solutions.","Scientific evidence can include monitoring results, species changes, nutrient levels and land-use information.","A realistic response should address the cause of the problem rather than only the visible symptom."],q:"What makes a response to a water issue evidence-based?",a:"It uses reliable information about the cause and effects and explains why the proposed action should reduce the problem."},
+    "Solids, liquids and gases": {p:["Matter has mass and occupies space and is made from particles.","Solid particles are close together in fixed positions and vibrate.","Liquid particles remain close together but can move past one another.","Gas particles are far apart, move freely and fill the available container."],q:"Why can a gas be compressed more easily than a liquid?",a:"Gas particles have much larger spaces between them."},
+    "Atoms, molecules and compounds": {p:["An atom is a basic particle of an element; an element contains one type of atom.","A molecule contains two or more atoms chemically bonded together.","A compound contains atoms from at least two different elements chemically bonded together.","Water is H₂O: two hydrogen atoms bonded to one oxygen atom, so water is both a molecule and a compound."],q:"Why is H₂O both a molecule and a compound?",a:"It contains multiple bonded atoms, making it a molecule, and those atoms come from two different elements, making it a compound."},
+    "Changing states": {p:["Melting is solid to liquid and freezing is liquid to solid.","Evaporation or boiling is liquid to gas and condensation is gas to liquid.","Heating transfers energy to particles, increasing their movement and allowing them to overcome attractions.","Cooling removes energy so particles move less and can become more closely arranged."],q:"What happens to particle movement when liquid water changes into water vapour?",a:"The particles gain energy, move faster and spread much farther apart."},
+    "Heating ice practical": {p:["Time is the independent variable and temperature is the dependent variable when heating ice at a steady rate.","Temperature readings should be taken at regular time intervals.","A line graph shows how temperature changes over time.","A flatter section can occur during a change of state because transferred energy is being used to change particle arrangement."],q:"Why can the temperature stay nearly constant while ice is melting?",a:"Energy is being used to change the state and particle arrangement rather than immediately increasing temperature."},
+    "Why wai matters research": {p:["A conclusion about wai should combine scientific evidence with cultural, historical and community knowledge.","Evidence should be selected because it supports the claim, not simply because it is interesting.","Scientific and cultural perspectives can complement one another rather than being treated as competing explanations.","A strong presentation explains why the evidence matters for people, ecosystems and future decisions."],q:"What makes a conclusion about wai stronger than a list of facts?",a:"It connects selected evidence to a clear claim and explains why that evidence matters."},
+
+    "Taiao and living things": {p:["Living things carry out life processes commonly summarised as MRS C GREN.","Respiration releases usable energy from food; sensitivity means detecting and responding to change.","Growth, reproduction, excretion and nutrition occur in living organisms.","All living things are made from one or more cells and interact with their environment."],q:"Which life process releases usable energy from food?",a:"Respiration."},
+    "Classification": {p:["Classification groups organisms by shared characteristics and relationships.","The hierarchy taught moves from kingdom to phylum, class, order, family, genus and species.","Scientific names use two words: genus then species.","A shared classification system reduces confusion caused by different common names."],q:"Which two classification levels make up a scientific name?",a:"Genus and species."},
+    "Vertebrates": {p:["Vertebrates have a backbone; invertebrates do not.","The five main vertebrate groups are fish, amphibians, reptiles, birds and mammals.","Groups can be identified using features such as body covering, reproduction, breathing structures and temperature regulation.","Classification should use observable evidence rather than where an animal happens to live."],q:"What feature do all vertebrates share?",a:"A backbone or vertebral column."},
+    "Cells I": {p:["Cells are the basic units of living organisms.","Animal cells contain a cell membrane, cytoplasm, nucleus and mitochondria.","Plant cells also have a cell wall, chloroplasts and a large permanent vacuole.","The function of each cell structure helps the cell survive and carry out its role."],q:"Name two structures found in plant cells but not typical animal cells.",a:"Any two of cell wall, chloroplasts and a large permanent vacuole."},
+    "Cells II": {p:["Specialised cells have structures suited to a particular function.","Sperm cells have a tail and many mitochondria for movement.","Root hair cells have a long extension that increases surface area for absorption.","Organisation increases from organelle to cell, tissue, organ, organ system and organism."],q:"Why does a root hair cell have a long extension?",a:"It increases surface area so more water and mineral ions can be absorbed from the soil."},
+    "Microscopes": {p:["Start with the lowest-power objective and centre the specimen before increasing magnification.","Use coarse focus carefully on low power, then fine focus to sharpen the image.","Total magnification equals eyepiece magnification multiplied by objective magnification.","A wet-mount slide should be thin enough for light to pass through the specimen."],q:"A ×10 eyepiece is used with a ×40 objective. What is the total magnification?",a:"×400."},
+    "Plant biology": {p:["Roots absorb water and mineral ions; stems support the plant and transport substances.","Leaves capture light and exchange gases through stomata.","Photosynthesis uses carbon dioxide and water to make glucose and oxygen using light energy.","Chlorophyll in chloroplasts absorbs the light energy required for photosynthesis."],q:"Which gas enters a leaf for photosynthesis?",a:"Carbon dioxide."},
+    "Leaf practical": {p:["Leaf shape, venation and surface features can be observed and compared systematically.","Veins transport water, minerals and sugars through the leaf.","A leaf rubbing can reveal the pattern of major veins without cutting the leaf.","Observations should describe visible evidence before making conclusions about function."],q:"What is one function of leaf veins?",a:"They transport water and minerals into the leaf and sugars away from photosynthesising cells."},
+    "Photosynthesis starch practical": {p:["Iodine solution tests for starch: a positive result changes from orange-brown to blue-black.","Leaves are often decolourised so the iodine colour change can be seen clearly.","Starch in a leaf provides evidence that glucose made by photosynthesis has been stored.","A comparison or control helps show whether light or another factor caused the difference."],q:"What colour change shows a positive test for starch?",a:"Iodine changes from orange-brown to blue-black."},
+    "Photosynthesis oxygen practical": {p:["Aquatic plants can release visible oxygen bubbles during photosynthesis.","Bubble rate can be used as an approximate indicator of photosynthesis rate.","Light intensity can be changed while temperature, plant size and water conditions are controlled.","Repeats are needed because bubble size and bubble release are not perfectly consistent."],q:"Why should plant size be kept the same when comparing bubble rate?",a:"Plant size could affect oxygen production, so it must be controlled for a fair comparison."},
+    "Plant reproductive anatomy": {p:["The stamen is the male reproductive structure and includes the anther and filament.","Anthers produce pollen containing male sex cells.","The carpel is the female structure and includes the stigma, style and ovary.","Ovules inside the ovary can develop into seeds after fertilisation."],q:"Which flower structure produces pollen?",a:"The anther."},
+    "Flower dissection": {p:["Dissection allows reproductive structures to be separated and examined closely.","Identify sepals and petals first, then locate stamens and the central carpel.","Use careful cuts so structures stay intact enough to observe and label.","A labelled layout should connect each structure with its reproductive role."],q:"Why should flower parts be removed carefully during a dissection?",a:"Keeping structures intact makes them easier to identify, compare and label accurately."},
+    "Pollination": {p:["Pollination is the transfer of pollen from anther to stigma.","After compatible pollen lands on a stigma, a pollen tube can grow down the style.","Fertilisation occurs when male and female sex cells join in an ovule.","The fertilised ovule develops into a seed."],q:"What is the difference between pollination and fertilisation?",a:"Pollination is pollen transfer to the stigma; fertilisation is the joining of male and female sex cells."},
+    "Aotearoa flowers": {p:["Flower features are adapted to the way pollen is transferred.","Wind-pollinated flowers often have exposed anthers and stigmas and produce lots of light pollen.","Bird- and insect-pollinated flowers may use colour, scent, nectar and shape to attract pollinators.","Native plant-pollinator relationships are part of Aotearoa ecosystems and can be affected by species decline."],q:"Why do wind-pollinated flowers produce large amounts of light pollen?",a:"Wind transfer is uncontrolled, so producing many light grains increases the chance that some reach another flower."},
+    "Seeds and germination": {p:["A seed contains an embryo and stored resources protected by a seed coat.","Most seeds require water, oxygen and a suitable temperature to germinate.","Seed dispersal reduces competition with the parent plant and other seedlings.","Dispersal adaptations can use wind, water, animals or explosive release."],q:"What three conditions do most seeds need to germinate?",a:"Water, oxygen and a suitable temperature."},
+    "Ecosystems I": {p:["An organism is one living thing; a population is members of one species in an area.","A community contains all interacting populations in an area.","An ecosystem includes the community plus non-living factors such as light, water, soil and temperature.","Biotic and abiotic factors can both affect the size and distribution of populations."],q:"What is the difference between a community and an ecosystem?",a:"A community includes the living populations; an ecosystem includes the community plus the non-living environment and their interactions."},
+    "Aotearoa ecosystems": {p:["Long geographic isolation allowed many unique endemic species to evolve in Aotearoa.","Introduced predators and habitat change have strongly affected native populations.","An endemic species occurs naturally only in a particular place.","Predator control, habitat restoration and protected areas can help restore ecosystems."],q:"Why does Aotearoa have many endemic species?",a:"Long geographic isolation allowed species to evolve independently with limited gene flow from other regions."},
+    "Adaptations": {p:["An adaptation is an inherited feature that improves survival or reproduction in a particular environment.","Structural adaptations are body features, such as webbed feet.","Behavioural adaptations are actions, such as migration.","Physiological adaptations are internal processes, such as venom production or antifreeze proteins."],q:"Classify migration as structural, behavioural or physiological.",a:"Behavioural."},
+    "Predators and prey": {p:["A predator hunts or consumes another organism; the organism eaten is prey.","The same organism can be both predator and prey in different feeding relationships.","Herbivores eat producers; omnivores eat both plant and animal material.","Changes in prey numbers can affect predator numbers and the rest of the food web."],q:"Can one animal be both predator and prey?",a:"Yes. It can eat one organism while being eaten by another."},
+    "Food chains and food webs": {p:["Producers capture energy and make biomass, usually through photosynthesis.","Consumers obtain energy by eating other organisms and decomposers recycle nutrients from dead material.","Food-chain arrows show the direction of energy and biomass transfer from food to consumer.","A food web combines connected food chains, so a change in one population can affect several others."],q:"Which direction should an arrow point between grass and a rabbit?",a:"From grass to rabbit, because energy transfers from the grass to the rabbit when it is eaten."},
+
+    "The Solar System": {p:["The Sun is a star whose gravity holds the Solar System together.","The planets orbit the Sun in the order Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus and Neptune.","The inner planets are smaller and rocky; the outer planets are much larger gas or ice giants.","Moons are natural satellites that orbit planets or dwarf planets."],q:"Which planet is fifth from the Sun?",a:"Jupiter."},
+    "Scale of the Solar System": {p:["Space is extremely large and most of the Solar System is empty space.","One astronomical unit (AU) is the average Earth–Sun distance: about 149.6 million km.","A light-year is a distance, not a time: the distance light travels in one year.","Asteroids are rocky or metallic; comets contain ice, dust and rock and can form tails near the Sun."],q:"Is a light-year a measure of time or distance?",a:"Distance."},
+    "Solar System scale practical": {p:["A scale model must use the same scale consistently for every value being compared.","Real size or distance is multiplied or divided by a scale factor to calculate the model value.","Planet-size scale and planet-distance scale may need to be different if both are to fit in a practical school model.","Working should include units so scale mistakes are easier to identify."],q:"Why must the same scale factor be used across a model?",a:"Otherwise the relative sizes or distances are distorted and the model no longer represents the real system accurately."},
+    "Astronomical cycles": {p:["Earth rotates once in about 24 hours, producing day and night.","Earth revolves around the Sun in about 365.25 days.","Earth’s axis is tilted about 23.5°.","Seasons result from axial tilt plus revolution, which changes sunlight angle and day length through the year."],q:"What mainly causes Earth’s seasons?",a:"Earth’s axial tilt together with its revolution around the Sun."},
+    "Solar and lunar eclipses": {p:["A solar eclipse occurs when the Moon passes between Earth and the Sun.","A lunar eclipse occurs when Earth is between the Sun and Moon and Earth’s shadow falls on the Moon.","Eclipses do not happen every month because the Moon’s orbit is tilted relative to Earth’s orbit around the Sun.","Umbra is the darkest central shadow; penumbra is the partial shadow."],q:"What is the object order during a solar eclipse?",a:"Sun – Moon – Earth."},
+    "Forms of energy": {p:["Energy is transferred and stored; it is not created or destroyed.","Moving objects have kinetic energy.","Energy can be stored chemically, gravitationally, elastically and thermally among other forms.","A useful description identifies where energy starts and where it is transferred."],q:"What energy store increases when an object is lifted higher?",a:"Gravitational potential energy."},
+    "Energy transfer": {p:["The total amount of energy is conserved during transfers and transformations.","Energy can move between stores through heating, mechanical work, electrical work or radiation.","Useful output is the energy transfer we want; dissipated energy spreads into the surroundings.","Energy-flow diagrams should show the input, useful output and wasted output."],q:"What happens to energy that is described as ‘wasted’?",a:"It is not destroyed; it is dissipated to the surroundings, often as thermal or sound energy."},
+    "Food calorimetry": {p:["Burning food releases chemical energy that can heat water.","Temperature change is final temperature minus starting temperature.","An estimate of energy transferred to water is mass of water × 4.18 × temperature change in joules.","A fair comparison controls water volume, distance from flame and starting conditions."],q:"Why must the same water volume be used when comparing foods?",a:"Different water masses need different amounts of energy to produce the same temperature change, so water volume must be controlled."},
+    "Energy sources": {p:["Renewable energy sources replenish naturally on human timescales; non-renewable sources are finite.","Aotearoa uses hydro, geothermal, wind and other sources to generate electricity.","Fossil-fuel combustion releases greenhouse gases and air pollutants.","Energy-source decisions involve trade-offs in reliability, cost, environmental impact and location."],q:"Give two renewable energy sources used in Aotearoa.",a:"Any two of hydro, geothermal, wind or solar."},
+    "Efficiency and power": {p:["Efficiency compares useful energy output with total energy input.","Efficiency (%) = useful output ÷ total input × 100.","Power is the rate of energy transfer: P = E ÷ t.","Power is measured in watts, where 1 W = 1 joule per second."],q:"A device receives 200 J and gives 50 J useful output. What is its efficiency?",a:"25%."},
+    "Waves": {p:["Waves transfer energy without transferring matter overall from source to destination.","Transverse vibrations are perpendicular to the direction the wave travels.","Longitudinal vibrations are parallel to the direction the wave travels.","Amplitude measures maximum displacement and wavelength is the distance between matching points on consecutive waves."],q:"In a transverse wave, how is the vibration direction related to the direction of travel?",a:"It is perpendicular to the direction of travel."},
+    "Sound waves": {p:["Sound is a longitudinal mechanical wave and needs particles through which to travel.","Frequency determines pitch and is measured in hertz.","Greater amplitude generally means a louder sound.","In the ear, vibrations pass through the eardrum and ossicles to the cochlea, where sensory cells create nerve signals."],q:"Why can sound not travel through a vacuum?",a:"Sound is a mechanical vibration and needs particles to pass the vibration from one place to another."},
+    "Light waves": {p:["Light is a transverse electromagnetic wave and can travel through a vacuum.","Visible light is one small part of the electromagnetic spectrum.","Objects appear coloured because they reflect some wavelengths and absorb others.","Transparent materials transmit most visible light; opaque materials do not."],q:"Why does a red object look red under white light?",a:"It reflects red wavelengths toward the eye and absorbs much of the other visible light."},
+    "Reflection": {p:["The normal is an imaginary line drawn at 90° to a surface at the point where a ray hits.","The angle of incidence is measured between the incident ray and the normal.","The angle of reflection equals the angle of incidence.","A ray diagram should use a ruler, arrowheads and correctly measured angles from the normal."],q:"An incident ray hits a mirror at 35° to the normal. What is the angle of reflection?",a:"35°."},
+    "Refraction": {p:["Refraction occurs when a wave changes speed as it enters a different medium.","Light usually bends toward the normal when it slows down and away from the normal when it speeds up.","A convex lens converges parallel rays; a concave lens diverges them.","Apparent bending of objects in water is caused by refraction at the boundary."],q:"Why does light bend when it passes from air into glass at an angle?",a:"Its speed changes at the boundary, causing its direction to change."},
+    "Sight": {p:["Light reflected from objects enters the eye through the cornea and pupil.","The cornea and lens refract light to focus an image on the retina.","The retina contains light-sensitive cells that create nerve signals.","The optic nerve carries signals to the brain, where visual information is interpreted."],q:"Where is light focused inside a healthy eye?",a:"On the retina."}
   };
 
-  function normalise(value) {
-    return String(value || "").toLowerCase().replace(/[^a-z0-9āēīōū]+/g, " ").trim();
+  const challengeData = {
+    "Bunsen burners": ["Which flame is hottest?",["Orange safety flame","Blue heating flame","Both are the same"],1,"Opening the air hole mixes in more oxygen and produces the hotter blue flame."],
+    "Variables and fair tests": ["You change ramp height and measure travel time. Ramp height is the…",["dependent variable","independent variable","control variable"],1,"It is the factor deliberately changed."],
+    "Bar graphs": ["Which dataset best suits a bar graph?",["Temperature every minute","Counts for four fruit types","Distance during a journey"],1,"Separate categories suit a bar graph."],
+    "Line graphs": ["Which dataset best suits a line graph?",["Temperature every minute","Favourite sports","Types of leaf"],0,"Time and temperature are continuous variables."],
+    "Manawatū water": ["What usually starts eutrophication?",["Too little sunlight","Excess nutrients","Too much dissolved oxygen"],1,"Nitrates and phosphates can trigger rapid algal growth."],
+    "Solids, liquids and gases": ["Which state has fixed volume but changes shape?",["Solid","Liquid","Gas"],1,"A liquid keeps its volume but takes the shape of its container."],
+    "Atoms, molecules and compounds": ["H₂O contains…",["2 H and 1 O","1 H and 2 O","2 H and 2 O"],0,"The subscript 2 applies to hydrogen."],
+    "Cells I": ["Which structure carries out photosynthesis?",["Nucleus","Chloroplast","Cell wall"],1,"Chloroplasts contain chlorophyll and absorb light."],
+    "Microscopes": ["×10 eyepiece × ×20 objective =",["×30","×200","×2000"],1,"Total magnification is multiplication, so 10 × 20 = 200."],
+    "Photosynthesis starch practical": ["A positive starch test turns…",["blue-black","bright red","colourless"],0,"Iodine turns blue-black when starch is present."],
+    "Pollination": ["Pollination is…",["sex cells joining","pollen moving to a stigma","a seed starting to grow"],1,"Fertilisation is the joining of sex cells; pollination happens first."],
+    "Seeds and germination": ["Which is NOT usually required for germination?",["Water","Oxygen","Light"],2,"Most seeds need water, oxygen and a suitable temperature; light is not a universal requirement."],
+    "Adaptations": ["Migration is a…",["structural adaptation","behavioural adaptation","physiological adaptation"],1,"Migration is an action or behaviour."],
+    "Food chains and food webs": ["Food-chain arrows show…",["which animal is biggest","direction of energy transfer","direction animals walk"],1,"Arrows point from the food to the consumer receiving the energy."],
+    "The Solar System": ["Which planet comes after Mars?",["Earth","Jupiter","Saturn"],1,"The order is Mercury, Venus, Earth, Mars, Jupiter…"],
+    "Astronomical cycles": ["Day and night are caused by Earth’s…",["rotation","revolution","distance from the Sun"],0,"Earth rotates once in about 24 hours."],
+    "Solar and lunar eclipses": ["Solar eclipse order",["Sun–Moon–Earth","Sun–Earth–Moon","Moon–Sun–Earth"],0,"The Moon must be between the Sun and Earth."],
+    "Energy transfer": ["‘Wasted’ energy is…",["destroyed","dissipated to surroundings","turned into matter"],1,"Energy is conserved; it becomes less useful as it spreads into the surroundings."],
+    "Efficiency and power": ["50 J useful from 200 J input =",["25%","50%","75%"],0,"50 ÷ 200 × 100 = 25%."],
+    "Waves": ["A higher amplitude sound is usually…",["louder","higher pitch","faster"],0,"Amplitude is linked to loudness; frequency is linked to pitch."],
+    "Sound waves": ["Pitch mainly depends on…",["amplitude","frequency","colour"],1,"Higher frequency produces a higher pitch."],
+    "Reflection": ["Incidence angle 40°. Reflection angle?",["20°","40°","80°"],1,"The angle of reflection equals the angle of incidence."],
+    "Refraction": ["Refraction happens because light changes…",["mass","speed","colour only"],1,"A speed change at a boundary can change the wave’s direction."],
+    "Sight": ["Which structure detects focused light?",["retina","pupil","optic nerve"],0,"Light-sensitive cells in the retina respond to the image." ]
+  };
+
+  function esc(value) {
+    return String(value).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   }
 
-  function words(value) {
-    return normalise(value).split(/\s+/).filter(w => w.length > 2 && !stopWords.has(w));
+  function visualFor(title) {
+    if (/Bunsen/.test(title)) return `<div class="lesson-visual"><svg viewBox="0 0 420 190" role="img" aria-label="Simplified Bunsen burner diagram"><rect x="165" y="136" width="90" height="16" rx="8"/><rect x="198" y="58" width="24" height="82" rx="8"/><rect x="188" y="112" width="44" height="24" rx="10"/><path d="M210 58 C175 32 197 9 210 18 C223 5 248 30 210 58Z" class="hot"/><line x1="232" y1="124" x2="300" y2="124"/><text x="306" y="129">collar / air hole</text><line x1="222" y1="76" x2="300" y2="76"/><text x="306" y="81">barrel</text><line x1="255" y1="145" x2="300" y2="160"/><text x="306" y="165">base</text></svg><p><strong>Look:</strong> opening the air hole changes the flame from visible orange to hotter blue.</p></div>`;
+    if (/Bar graphs|Line graphs/.test(title)) return `<div class="lesson-visual graph-visual"><div class="mini-axis"><span style="height:38%"></span><span style="height:70%"></span><span style="height:54%"></span><span style="height:88%"></span></div><div><strong>${title === "Bar graphs" ? "Separate categories" : "Continuous relationship"}</strong><p>${title === "Bar graphs" ? "Bars compare distinct groups." : "Plot points against a continuous x-axis and show the trend."}</p></div></div>`;
+    if (/Solids|Changing states|Heating ice/.test(title)) return `<div class="lesson-visual particle-visual"><div class="pv solid"><i></i><i></i><i></i><i></i><i></i><i></i><small>solid</small></div><span>→ heat →</span><div class="pv liquid"><i></i><i></i><i></i><i></i><i></i><i></i><small>liquid</small></div><span>→ heat →</span><div class="pv gas"><i></i><i></i><i></i><i></i><i></i><i></i><small>gas</small></div></div>`;
+    if (/Atoms, molecules/.test(title)) return `<div class="lesson-visual molecule-visual"><span class="atom h">H</span><b>—</b><span class="atom o">O</span><b>—</b><span class="atom h">H</span><p>H₂O has two hydrogen atoms bonded to one oxygen atom.</p></div>`;
+    if (/Cells I|Cells II/.test(title)) return `<div class="lesson-visual cell-visual"><div class="cell-outline"><span class="cell-nucleus">nucleus</span><span class="cell-vacuole">vacuole</span><span class="cell-chl c1">chloroplast</span><span class="cell-chl c2"></span></div><p>Plant cells have a cell wall, chloroplasts and a large vacuole as well as structures shared with animal cells.</p></div>`;
+    if (/Microscopes/.test(title)) return `<div class="lesson-visual formula-visual"><strong>Total magnification</strong><span>eyepiece × objective</span><b>10 × 40 = ×400</b></div>`;
+    if (/Plant reproductive|Flower dissection|Pollination|Aotearoa flowers/.test(title)) return `<div class="lesson-visual flower-visual"><svg viewBox="0 0 420 190" role="img" aria-label="Simplified flower reproductive structures"><circle cx="210" cy="75" r="38"/><ellipse cx="145" cy="72" rx="55" ry="26"/><ellipse cx="275" cy="72" rx="55" ry="26"/><line x1="210" y1="42" x2="210" y2="145"/><circle cx="210" cy="38" r="10"/><ellipse cx="180" cy="68" rx="8" ry="14"/><ellipse cx="240" cy="68" rx="8" ry="14"/><text x="222" y="36">stigma</text><text x="250" y="70">anther</text><text x="222" y="142">ovary</text></svg></div>`;
+    if (/Food chains|Predators|Ecosystems/.test(title)) return `<div class="lesson-visual food-visual"><span>🌿<small>producer</small></span><b>→</b><span>🐛<small>consumer</small></span><b>→</b><span>🐦<small>predator</small></span><p>Arrows show the direction of energy transfer.</p></div>`;
+    if (/Solar System|Scale of the Solar/.test(title)) return `<div class="lesson-visual solar-visual"><span class="sun">☀</span><i>Mercury</i><i>Venus</i><i>Earth</i><i>Mars</i><i>Jupiter</i><i>Saturn</i><i>Uranus</i><i>Neptune</i></div>`;
+    if (/eclipses/.test(title)) return `<div class="lesson-visual eclipse-visual"><span class="sun-disc">Sun</span><b>→</b><span class="moon-disc">Moon</span><b>→</b><span class="earth-disc">Earth</span><p>Solar eclipse: Moon between Sun and Earth.</p></div>`;
+    if (/Energy/.test(title) || /calorimetry|Efficiency/.test(title)) return `<div class="lesson-visual energy-visual"><span>energy input</span><b>→</b><span>useful output</span><b>+</b><span>dissipated output</span></div>`;
+    if (/Waves|Sound waves|Light waves/.test(title)) return `<div class="lesson-visual wave-visual"><svg viewBox="0 0 520 130" role="img" aria-label="Wave diagram"><path d="M5 65 C35 5 65 5 95 65 S155 125 185 65 S245 5 275 65 S335 125 365 65 S425 5 455 65 S500 125 515 65"/><line x1="5" y1="65" x2="515" y2="65"/></svg><p>Amplitude is measured from the centre line; wavelength is the distance between matching points.</p></div>`;
+    if (/Reflection/.test(title)) return `<div class="lesson-visual ray-visual"><svg viewBox="0 0 420 190"><line x1="210" y1="20" x2="210" y2="170" class="normal"/><line x1="80" y1="150" x2="210" y2="90"/><line x1="210" y1="90" x2="340" y2="150"/><line x1="40" y1="90" x2="380" y2="90" class="mirror"/></svg><p>Measure incidence and reflection angles from the normal, not from the mirror.</p></div>`;
+    if (/Refraction/.test(title)) return `<div class="lesson-visual ray-visual"><svg viewBox="0 0 420 190"><line x1="20" y1="95" x2="400" y2="95" class="mirror"/><line x1="210" y1="20" x2="210" y2="170" class="normal"/><line x1="85" y1="25" x2="210" y2="95"/><line x1="210" y1="95" x2="275" y2="170"/></svg><p>Entering a more optically dense medium usually slows light and bends the ray toward the normal.</p></div>`;
+    if (/Sight/.test(title)) return `<div class="lesson-visual eye-visual"><span>cornea</span><b>→</b><span>pupil</span><b>→</b><span>lens</span><b>→</b><span>retina</span><b>→</b><span>optic nerve</span></div>`;
+    return `<div class="lesson-visual concept-visual"><strong>${esc(title)}</strong><span>Observe → explain → apply</span></div>`;
   }
 
-  function topicFor(unit, lesson) {
-    const wanted = (aliases[lesson[0]] || []).map(normalise);
-    if (wanted.length) {
-      for (const alias of wanted) {
-        const exact = unit.topics.find(t => {
-          const title = normalise(t.title);
-          return title === alias || title.includes(alias) || alias.includes(title);
-        });
-        if (exact) return exact;
-      }
-    }
-
-    const lessonWords = new Set(words(lesson[0] + " " + lesson[1]));
-    let best = null;
-    let bestScore = 0;
-    unit.topics.forEach(topic => {
-      const topicWords = new Set(words(topic.title));
-      let score = 0;
-      topicWords.forEach(w => { if (lessonWords.has(w)) score += 1; });
-      if (score > bestScore) { bestScore = score; best = topic; }
-    });
-    return bestScore >= 2 ? best : null;
-  }
-
-  function checkFor(unit, lesson, topic) {
-    const target = new Set(words(lesson[0] + " " + lesson[1] + " " + (topic ? topic.title : "")));
-    let best = null;
-    let bestScore = 0;
-    (unit.bank || []).forEach(item => {
-      const qWords = new Set(words(item[0]));
-      let score = 0;
-      qWords.forEach(w => { if (target.has(w)) score += 1; });
-      if (score > bestScore) { bestScore = score; best = item; }
-    });
-    if (bestScore >= 2) return best;
-    return [
-      `Explain the main idea in ${lesson[0]}.`,
-      lesson[1]
-    ];
+  function challengeFor(title, key) {
+    const item = challengeData[title];
+    if (!item) return "";
+    return `<div class="lesson-micro"><strong>Quick challenge</strong><p>${esc(item[0])}</p><div class="micro-options">${item[1].map((o,i)=>`<button type="button" data-up-answer="${i}" data-up-correct="${item[2]}" data-up-key="${key}">${esc(o)}</button>`).join("")}</div><p class="micro-feedback" data-up-feedback="${key}" aria-live="polite"></p><template data-up-explain="${key}">${esc(item[3])}</template></div>`;
   }
 
   window.lessonPanel = function (slug, unit, lesson, index, checked) {
-    const topic = topicFor(unit, lesson);
-    const points = topic && Array.isArray(topic.points) && topic.points.length
-      ? topic.points
-      : [lesson[1]];
-    const check = checkFor(unit, lesson, topic);
-
-    return `<details class="lesson-panel" id="${slug}-lesson-${index}" ${index === 0 ? "open" : ""}>
-      <summary><span class="lesson-number">${String(index + 1).padStart(2,"0")}</span><span><small>Mission ${String(index + 1).padStart(2,"0")}</small><strong>${lesson[0]}</strong></span><span class="lesson-toggle">Open</span></summary>
+    const content = lessonContent[lesson[0]] || {p:[lesson[1]],q:`Explain the main idea in ${lesson[0]}.`,a:lesson[1]};
+    const key = `${slug}-${index}`;
+    return `<details class="lesson-panel upgraded-lesson" id="${slug}-lesson-${index}" ${index === 0 ? "open" : ""}>
+      <summary><span class="lesson-number">${String(index + 1).padStart(2,"0")}</span><span><small>Mission ${String(index + 1).padStart(2,"0")}</small><strong>${esc(lesson[0])}</strong></span><span class="lesson-toggle">Open</span></summary>
       <div class="lesson-body">
-        <section class="mission-step mission-learn"><span class="mission-label">1 • Learn</span><p class="lesson-focus">${lesson[1]}</p><h3>Key knowledge</h3><ul>${points.map(point=>`<li>${point}</li>`).join("")}</ul>${topic && topic.note ? `<div class="callout"><strong>Remember:</strong> ${topic.note}</div>` : ""}</section>
-        <section class="mission-step mission-try"><span class="mission-label">2 • Try</span><div class="lesson-task"><strong>Class mission</strong><p>${lesson[2]}</p></div></section>
-        <section class="mission-step mission-check"><span class="mission-label">3 • Check</span><details class="lesson-check"><summary>${check[0]}</summary><p><strong>Check your answer:</strong> ${check[1]}</p></details></section>
+        <section class="mission-step mission-learn"><span class="mission-label">1 • Learn</span><p class="lesson-focus">${esc(lesson[1])}</p><h3>Key knowledge</h3><ul>${content.p.map(point=>`<li>${esc(point)}</li>`).join("")}</ul>${visualFor(lesson[0])}</section>
+        <section class="mission-step mission-try"><span class="mission-label">2 • Try</span><div class="lesson-task"><strong>Class mission</strong><p>${esc(lesson[2])}</p></div>${challengeFor(lesson[0],key)}</section>
+        <section class="mission-step mission-check"><span class="mission-label">3 • Check</span><details class="lesson-check"><summary>${esc(content.q)}</summary><p><strong>Check your answer:</strong> ${esc(content.a)}</p></details></section>
         <section class="mission-step mission-finish"><span class="mission-label">4 • Record</span><label class="complete-check"><input type="checkbox" data-course-complete="${slug}" data-lesson="${index}" ${checked ? "checked" : ""}> I completed the learning, task and check</label></section>
       </div>
     </details>`;
   };
 
-  // course-ui.js renders once before this file loads. Render again using the fixed renderer.
+  // Practice results are useful evidence, but should not be labelled as teacher-verified mastery.
+  window.quizStatus = function (slug) {
+    const result = bestQuiz(slug);
+    if (!result) return "No practice checkpoint result saved yet.";
+    const level = result.percent >= 90 ? "Practice strong" : result.percent >= 70 ? "Practice secure" : "Practice developing";
+    return `Best result: <strong>${result.score}/${result.total} — ${level}</strong>`;
+  };
+  window.progressLevel = function (slug) {
+    const completed = completedLessons(slug).length;
+    const quiz = bestQuiz(slug);
+    if (!completed && !quiz) return {name:"Not started", className:"not-started"};
+    if (quiz && quiz.percent >= 90) return {name:"Practice strong", className:"mastered"};
+    if (quiz && quiz.percent >= 70) return {name:"Practice secure", className:"secure"};
+    return {name:"In progress", className:"developing"};
+  };
+
+  // Put the taught practical sequence ahead of optional extension investigations.
+  const originalPracticalsPage = window.practicalsPage;
+  if (typeof originalPracticalsPage === "function") {
+    window.practicalsPage = function () {
+      const taught = [
+        ["Heating ice","Precious Wai","Heat ice/water, record temperature at regular intervals, graph temperature against time and explain any flat section using particle energy."],
+        ["Leaf observations","Living World","Observe leaf shape, venation and surface features, make a rubbing and connect structures with transport and photosynthesis."],
+        ["Photosynthesis starch test","Living World","Use iodine to test a prepared leaf for starch and connect the colour change with glucose storage after photosynthesis."],
+        ["Photosynthesis oxygen","Living World","Observe oxygen bubbles from aquatic plant material, identify variables and discuss limits of using bubble count as a rate measure."],
+        ["Flower dissection","Living World","Dissect a flower carefully, arrange and label reproductive structures, then explain the role of anther, stigma, style, ovary and ovule."],
+        ["Solar System scale","Space and Energy","Use a consistent scale to model selected Solar System sizes or distances and show all calculations with units."],
+        ["Food calorimetry","Space and Energy","Burn a food sample to heat water, measure temperature change and compare estimated energy transfer under controlled conditions."]
+      ];
+      const block = `<section class="taught-practicals"><div class="section-heading"><span class="kicker">From your lessons</span><h2>Practicals we actually use in class</h2><p>Revisit the purpose, evidence and explanation from the practical sequence before trying the extra investigation missions below.</p></div><div class="taught-practical-grid">${taught.map((p,i)=>`<article><span>${String(i+1).padStart(2,"0")} • ${p[1]}</span><h3>${p[0]}</h3><p>${p[2]}</p></article>`).join("")}</div></section>`;
+      return originalPracticalsPage().replace('<section class="course-section first">','<section class="course-section first">'+block);
+    };
+  }
+
+  if (!document.getElementById("year9-upgrade-styles")) {
+    const style = document.createElement("style");
+    style.id = "year9-upgrade-styles";
+    style.textContent = `
+      .upgraded-lesson .lesson-visual{margin:1rem 0 0;padding:1rem;border:1px solid rgba(0,0,0,.13);border-radius:16px;background:linear-gradient(135deg,#fff,#f4f5f3);overflow:hidden}
+      .lesson-visual svg{width:100%;max-height:210px}.lesson-visual svg line,.lesson-visual svg path{stroke:#181818;stroke-width:4;fill:none}.lesson-visual svg text{font:14px Inter,sans-serif;fill:#181818}.lesson-visual svg .hot{fill:#e17b2f;stroke:#9f171b}.lesson-visual p{margin:.55rem 0 0}.concept-visual{display:flex;gap:.7rem;align-items:center;justify-content:space-between}.concept-visual span{font-size:.9rem;opacity:.72}
+      .graph-visual{display:grid;grid-template-columns:minmax(150px,240px) 1fr;gap:1rem;align-items:center}.mini-axis{height:130px;border-left:3px solid #222;border-bottom:3px solid #222;display:flex;align-items:flex-end;gap:12px;padding:0 14px}.mini-axis span{flex:1;background:#9f171b;border-radius:5px 5px 0 0}
+      .particle-visual{display:flex;align-items:center;justify-content:center;gap:.65rem;flex-wrap:wrap}.pv{position:relative;width:100px;height:85px;border:2px solid #222;border-radius:10px}.pv i{position:absolute;width:11px;height:11px;border-radius:50%;background:#166b7a}.pv small{position:absolute;bottom:-22px;left:0;right:0;text-align:center}.pv.solid i:nth-child(1){left:25px;top:22px}.pv.solid i:nth-child(2){left:43px;top:22px}.pv.solid i:nth-child(3){left:61px;top:22px}.pv.solid i:nth-child(4){left:25px;top:42px}.pv.solid i:nth-child(5){left:43px;top:42px}.pv.solid i:nth-child(6){left:61px;top:42px}.pv.liquid i:nth-child(1){left:18px;top:42px}.pv.liquid i:nth-child(2){left:36px;top:34px}.pv.liquid i:nth-child(3){left:54px;top:43px}.pv.liquid i:nth-child(4){left:70px;top:32px}.pv.liquid i:nth-child(5){left:29px;top:56px}.pv.liquid i:nth-child(6){left:58px;top:58px}.pv.gas i:nth-child(1){left:11px;top:14px}.pv.gas i:nth-child(2){left:72px;top:10px}.pv.gas i:nth-child(3){left:40px;top:35px}.pv.gas i:nth-child(4){left:14px;top:62px}.pv.gas i:nth-child(5){left:76px;top:61px}.pv.gas i:nth-child(6){left:53px;top:8px}
+      .molecule-visual{text-align:center}.atom{display:inline-grid;place-items:center;width:62px;height:62px;border-radius:50%;font-weight:800;font-size:1.35rem;margin:.3rem}.atom.h{background:#eef0f1}.atom.o{background:#f3c9ca}.molecule-visual b{font-size:1.6rem}.cell-visual{display:grid;grid-template-columns:220px 1fr;gap:1rem;align-items:center}.cell-outline{height:150px;border:8px solid #287049;border-radius:28px;position:relative;background:#e9f3ec}.cell-nucleus{position:absolute;left:22px;top:50px;width:62px;height:62px;border-radius:50%;background:#d6b1d4;display:grid;place-items:center;font-size:.7rem}.cell-vacuole{position:absolute;right:18px;top:24px;width:100px;height:90px;border-radius:35%;background:#cdeaf0;display:grid;place-items:center;font-size:.7rem}.cell-chl{position:absolute;background:#68a875;border-radius:50%;font-size:.6rem;padding:.2rem}.cell-chl.c1{left:90px;top:12px}.cell-chl.c2{left:90px;bottom:12px}.formula-visual{text-align:center;display:grid;gap:.4rem}.formula-visual strong{font-size:1.25rem}.formula-visual b{font-size:1.4rem}.flower-visual svg circle,.flower-visual svg ellipse{fill:#f0d5db;stroke:#9f171b;stroke-width:3}.flower-visual svg line{stroke:#287049}.food-visual,.eclipse-visual,.energy-visual,.eye-visual{display:flex;align-items:center;justify-content:center;gap:.65rem;flex-wrap:wrap;text-align:center}.food-visual span{font-size:2rem}.food-visual small{display:block;font-size:.72rem}.solar-visual{display:flex;align-items:center;gap:.45rem;overflow-x:auto;padding:.7rem}.solar-visual .sun{font-size:3rem}.solar-visual i{font-style:normal;white-space:nowrap;padding:.4rem .55rem;border:1px solid #bbb;border-radius:999px}.sun-disc,.moon-disc,.earth-disc,.energy-visual span,.eye-visual span{padding:.65rem .8rem;border-radius:999px;background:#eef0f1}.sun-disc{background:#f2d77d}.earth-disc{background:#b9d8ef}.wave-visual svg path{stroke:#354b79;stroke-width:5}.wave-visual svg line{stroke:#aaa;stroke-width:2}.ray-visual svg .normal{stroke-dasharray:8 8;stroke:#888}.ray-visual svg .mirror{stroke:#354b79;stroke-width:7}
+      .lesson-micro{margin-top:1rem;padding:1rem;border-radius:14px;background:#111;color:#fff}.lesson-micro p{margin:.35rem 0 .75rem}.micro-options{display:flex;gap:.55rem;flex-wrap:wrap}.micro-options button{border:1px solid rgba(255,255,255,.45);background:#262626;color:#fff;padding:.6rem .8rem;border-radius:999px;cursor:pointer}.micro-options button:hover,.micro-options button:focus{background:#fff;color:#111}.micro-feedback{min-height:1.25em;font-weight:700}.micro-feedback.correct{color:#9fe0b1}.micro-feedback.retry{color:#ffd08a}
+      .taught-practicals{margin-bottom:2rem}.taught-practical-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem}.taught-practical-grid article{padding:1rem;border-radius:16px;background:#fff;border:1px solid rgba(0,0,0,.12)}.taught-practical-grid article span{font-size:.76rem;text-transform:uppercase;letter-spacing:.05em;opacity:.65}.taught-practical-grid article h3{margin:.35rem 0}
+      @media (max-width:700px){.graph-visual,.cell-visual{grid-template-columns:1fr}.cell-outline{max-width:260px}.concept-visual{align-items:flex-start;flex-direction:column}.lesson-visual{font-size:.95rem}}
+    `;
+    document.head.appendChild(style);
+  }
+
+  if (!window.__year9UpgradeBound) {
+    window.__year9UpgradeBound = true;
+    document.addEventListener("click", event => {
+      const button = event.target.closest("[data-up-answer]");
+      if (!button) return;
+      const key = button.dataset.upKey;
+      const feedback = document.querySelector(`[data-up-feedback="${key}"]`);
+      const explain = document.querySelector(`[data-up-explain="${key}"]`);
+      const correct = button.dataset.upAnswer === button.dataset.upCorrect;
+      if (feedback) {
+        feedback.textContent = correct ? `Correct. ${explain ? explain.content.textContent : ""}` : "Try again, then explain why your choice fits the science.";
+        feedback.className = `micro-feedback ${correct ? "correct" : "retry"}`;
+      }
+    });
+  }
+
+  // course-ui.js renders once before this file loads. Render again with upgraded lessons.
   if (typeof window.renderCourseSite === "function") window.renderCourseSite();
 })();
