@@ -357,15 +357,7 @@ function progressSummary() {
 }
 
 function examPage() {
-  return `<section class="page-heading exam-heading"><p class="eyebrow">End-of-year exam revision</p><h1>Whole-year preparation</h1><p>Mix the four learning areas and practise retrieving information without knowing which topic comes next.</p></section>
-    <section class="course-section first exam-layout">
-      <div>
-        <section class="exam-section"><span class="kicker">Coverage</span><h2>Four areas to revise</h2><div class="exam-units">${Object.entries(units).map(([slug,u])=>`<a href="#revision/${slug}" style="--unit-colour:${courseInfo[slug].colour}"><strong>${u.title}</strong><span>${u.quiz.length + u.practice.length} revision questions</span></a>`).join("")}</div></section>
-        <section class="exam-section"><span class="kicker">Mixed recall</span><h2>20-question exam practice</h2><p>Each new set draws questions from all four areas. Complete it without notes, then mark it.</p><button class="button" id="build-exam" type="button">Generate a mixed set</button><div id="exam-quiz"></div></section>
-        <section class="exam-section"><span class="kicker">Written responses</span><h2>Strong science answers</h2><div class="answer-framework"><div><strong>See</strong><p>Identify the evidence, pattern, process or scientific idea in the question.</p></div><div><strong>Know</strong><p>Use the correct scientific kupu, facts and relationships.</p></div><div><strong>Apply</strong><p>Connect the knowledge directly to the situation and explain why it happens.</p></div></div></section>
-      </div>
-      <aside class="exam-checklist"><h2>Readiness checklist</h2>${["I can define key kupu without notes.","I can read tables, graphs and diagrams.","I show working and include units.","I explain using because, therefore or so.","I can compare two ideas clearly.","I check every page before finishing."].map((x,i)=>`<label><input type="checkbox" data-exam-check="${i}"> ${x}</label>`).join("")}</aside>
-    </section>`;
+  return window.Y9ExamPrep.html();
 }
 
 function assessmentPage() {
@@ -384,6 +376,7 @@ function completedLessons(slug) {
 }
 
 function bindCourseInteractions(route, slug) {
+  if (route === "exam") window.Y9ExamPrep?.init();
   document.querySelectorAll("[data-course-complete]").forEach(input=>input.addEventListener("change",()=>{
     const area=input.dataset.courseComplete;
     const completed=new Set(completedLessons(area));
@@ -460,8 +453,6 @@ function bindCourseInteractions(route, slug) {
   });
   const printButton=document.querySelector("#print-progress");
   if (printButton) printButton.addEventListener("click",()=>window.print());
-  const build=document.querySelector("#build-exam");
-  if (build) build.addEventListener("click",buildMixedExam);
   document.querySelectorAll("[data-exam-check]").forEach(box=>{
     box.checked=localStorage.getItem(`manukura-exam-${box.dataset.examCheck}`)==="1";
     box.addEventListener("change",()=>localStorage.setItem(`manukura-exam-${box.dataset.examCheck}`,box.checked?"1":"0"));
