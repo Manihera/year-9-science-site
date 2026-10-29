@@ -37,14 +37,14 @@ window.manukuraExpandedContent = {
     ],
     quiz: [
       {q:"Which part of a Bunsen burner controls how much air mixes with the gas?",options:["Base","Collar","Barrel","Gas hose"],a:1,why:"Turning the collar opens or closes the air hole."},
-      {q:"Which instrument measures liquid volume most accurately?",options:["Beaker","Conical flask","Measuring cylinder","Test tube"],a:2,why:"A measuring cylinder has a graduated scale designed for measuring volume."},
-      {q:"Where should you read the volume of water in a measuring cylinder?",options:["Top of the meniscus","Bottom of the meniscus at eye level","Above eye level","From any angle"],a:1,why:"Reading the bottom of the meniscus at eye level reduces parallax error."},
+      {q:"Which piece of equipment is best for measuring liquid volume?",options:["Beaker","Conical flask","Measuring cylinder","Test tube"],a:2,why:"A measuring cylinder has clear scale marks for measuring volume."},
+      {q:"Where should you read the volume of water in a measuring cylinder?",options:["Top of the meniscus","Bottom of the meniscus at eye level","Above eye level","From any angle"],a:1,why:"Read the bottom of the curved water surface at eye level. This prevents an incorrect reading caused by viewing it from an angle."},
       {q:"Which is a qualitative observation?",options:["The water is 18 °C","The leaf is 7 cm long","The powder is pale yellow","There are six bubbles"],a:2,why:"Pale yellow describes a quality without a number."},
       {q:"Why should an experiment be repeated?",options:["To change the aim","To improve reliability and find an average","To remove the dependent variable","To guarantee the hypothesis"],a:1,why:"Repeats show consistency and reduce the influence of unusual measurements."},
-      {q:"Which data normally suits a bar graph?",options:["Temperature measured every minute","Height over time","Different categories of fruit","Speed throughout a journey"],a:2,why:"Bar graphs compare separate categories or discrete values."},
+      {q:"Which data is best shown using a bar graph?",options:["Temperature measured every minute","Height over time","Different categories of fruit","Speed throughout a journey"],a:2,why:"A bar graph compares separate groups or categories."},
       {q:"A measurement is close to the accepted value. It is...",options:["Precise","Accurate","Discrete","Anomalous"],a:1,why:"Accuracy describes closeness to the accepted or true value."},
       {q:"Which report section lists tables, graphs and observations?",options:["Aim","Method","Results","Discussion"],a:2,why:"The results section presents collected data."},
-      {q:"What makes instructions in a scientific method useful?",options:["They are short only","They allow another person to repeat the experiment","They include the final answer","They change each time"],a:1,why:"A method needs enough ordered detail for replication."},
+      {q:"What makes a scientific method useful?",options:["It is short only","Another person can follow it and repeat the experiment","It includes the final answer","It changes each time"],a:1,why:"The steps must be clear and in order so another person can repeat the investigation."},
       {q:"Which is the best control variable when testing how ramp height affects marble travel time?",options:["Ramp height","Travel time","The same marble","The conclusion"],a:2,why:"Using the same marble prevents marble differences affecting the result."}
     ],
     practice: [
@@ -137,14 +137,14 @@ window.manukuraExpandedContent = {
     quiz: [
       {q:"What does mauri refer to in relation to wai?",options:["Its market price","Its life force and vitality","Its temperature only","Its depth"],a:1,why:"Mauri describes the life force and health of the water system."},
       {q:"Which process forms clouds?",options:["Evaporation","Condensation","Freezing","Infiltration"],a:1,why:"Cooling water vapour condenses into tiny liquid droplets."},
-      {q:"What usually begins eutrophication?",options:["A lack of sunlight","Excess nutrients entering water","Fish leaving the river","Water freezing"],a:1,why:"Nitrates and phosphates can stimulate rapid algal growth."},
+      {q:"What can cause too much algae to grow in a waterway?",options:["A lack of sunlight","Too many nutrients entering the water","Fish leaving the river","Water freezing"],a:1,why:"Extra nutrients from sources such as fertiliser can cause algae to grow very quickly."},
       {q:"Why can an algal bloom lead to fish deaths?",options:["Algae add too much salt","Decomposition lowers dissolved oxygen","Fish become too warm immediately","The river stops flowing"],a:1,why:"Decomposers use oxygen while breaking down dead algae."},
       {q:"Which statement about H₂O is correct?",options:["It is one oxygen atom only","It contains two oxygen and one hydrogen","It contains two hydrogen and one oxygen","It is not matter"],a:2,why:"The subscript 2 shows two hydrogen atoms for every oxygen atom."},
       {q:"Why is water both a molecule and a compound?",options:["It is always liquid","It has bonded atoms from two elements","It contains only oxygen","It can freeze"],a:1,why:"H₂O contains chemically bonded hydrogen and oxygen atoms."},
       {q:"Which state has fixed volume but changes shape to fit its container?",options:["Solid","Liquid","Gas","Plasma only"],a:1,why:"Liquid particles move past one another while remaining close together."},
       {q:"Which state can be compressed most easily?",options:["Solid","Liquid","Gas","All equally"],a:2,why:"Gas particles have large spaces between them."},
       {q:"What is the role of kaitiakitanga?",options:["Using all resources quickly","Guarding and caring for the environment","Separating water sources for experiments only","Naming chemical elements"],a:1,why:"Kaitiakitanga involves responsibilities and practices that protect the environment."},
-      {q:"Which action most directly reduces nutrient runoff?",options:["Applying extra fertiliser before rain","Planting vegetation beside waterways","Removing stream-bank plants","Paving more land"],a:1,why:"Riparian plants trap sediment and absorb some nutrients before runoff reaches the water."}
+      {q:"Which action most directly reduces nutrient runoff?",options:["Applying extra fertiliser before rain","Planting vegetation beside waterways","Removing stream-bank plants","Paving more land"],a:1,why:"Plants along stream banks trap soil and absorb some nutrients before runoff reaches the water."}
     ],
     practice: [
       ["Explain how the water cycle connects Ranginui and Papatūānuku.","Water evaporates from the land and waterways, moves through the atmosphere, condenses and returns as precipitation. This continuous movement connects sky, land and water."],
@@ -262,11 +262,11 @@ window.manukuraExpandedContent = {
       {q:"Which flower structure produces pollen?",options:["Stigma","Anther","Ovary","Sepal"],a:1,why:"Pollen develops in the anther at the top of the stamen."},
       {q:"What happens after fertilisation in a flowering plant?",options:["The ovule develops into a seed","The petal makes pollen","The root becomes a flower","The stigma becomes chlorophyll"],a:0,why:"A fertilised ovule develops into a seed."},
       {q:"Why are seeds dispersed away from the parent?",options:["To increase competition","To reduce competition for light, water and minerals","To stop germination","To avoid all animals"],a:1,why:"Dispersal reduces competition with the established parent and nearby seedlings."},
-      {q:"Which is an abiotic factor?",options:["Fungus","Bird","Soil acidity","Grass"],a:2,why:"Soil acidity is a non-living environmental condition."},
+      {q:"Which is an abiotic, or non-living, factor?",options:["Fungus","Bird","Soil acidity","Grass"],a:2,why:"Soil acidity is a non-living part of the environment."},
       {q:"Which adaptation type is migration?",options:["Structural","Physiological","Behavioural","Cellular only"],a:2,why:"Migration is an action performed by an organism."},
-      {q:"Which adaptation type is venom production?",options:["Structural","Physiological","Behavioural","Ecological"],a:1,why:"Venom production is an internal biochemical process."},
+      {q:"Which type of adaptation is venom production?",options:["Structural","Physiological","Behavioural","Ecological"],a:1,why:"Venom production is a physiological adaptation because it is a process that happens inside the organism."},
       {q:"Why did pouākai decline after moa disappeared?",options:["Moa became predators","A major prey and energy source was lost","Pouākai became producers","Plants stopped photosynthesising"],a:1,why:"The specialised predator lost its main prey."},
-      {q:"Which organism starts most food chains?",options:["Apex predator","Producer","Decomposer","Secondary consumer"],a:1,why:"Producers capture light energy and make biomass."},
+      {q:"Which type of organism starts most food chains?",options:["Apex predator","Producer","Decomposer","Secondary consumer"],a:1,why:"Producers such as plants capture light energy and make food."},
       {q:"What is a mouse that eats a beetle and is eaten by an owl?",options:["Producer only","Predator and prey","Apex predator","Decomposer"],a:1,why:"It preys on the beetle and becomes prey for the owl."}
     ],
     practice: [
@@ -387,7 +387,7 @@ window.manukuraExpandedContent = {
       {q:"What is one astronomical unit?",options:["Earth–Moon distance","Earth–Sun distance","Sun–Jupiter distance","Distance light travels in a year"],a:1,why:"One AU is the average distance between Earth and the Sun."},
       {q:"Why is summer warmer than winter?",options:["Earth is much closer to the Sun","The tilted hemisphere receives more direct sunlight and longer days","The Sun produces more energy","The Moon reflects extra light"],a:1,why:"Earth's tilt changes the angle and duration of sunlight."},
       {q:"During a lunar eclipse, which object is in the middle?",options:["The Moon","The Sun","Earth","Mars"],a:2,why:"Earth blocks sunlight and its shadow falls on the Moon."},
-      {q:"Which heat-transfer method does not need particles?",options:["Conduction","Convection","Radiation","Evaporation"],a:2,why:"Radiation travels as electromagnetic waves, even through a vacuum."},
+      {q:"Which type of heat transfer can move through empty space?",options:["Conduction","Convection","Radiation","Evaporation"],a:2,why:"Radiation can travel through empty space. It does not need particles."},
       {q:"A machine transfers 600 J in 3 s. What is its power?",options:["1800 W","603 W","200 W","0.005 W"],a:2,why:"P = E ÷ t = 600 ÷ 3 = 200 W."},
       {q:"A device receives 500 J and produces 350 J useful energy. What is its efficiency?",options:["70%","150%","30%","1.4%"],a:0,why:"350 ÷ 500 × 100 = 70%."},
       {q:"Which is a renewable energy source?",options:["Coal","Oil","Natural gas","Wind"],a:3,why:"Wind is naturally replenished."},
