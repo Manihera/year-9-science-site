@@ -299,7 +299,7 @@ const units = {
     ],
     quiz: [
       {q:"Which planet is fifth from the Sun?", options:["Mars","Jupiter","Saturn","Earth"], a:1, why:"The order begins Mercury, Venus, Earth, Mars, Jupiter."},
-      {q:"What mainly causes the seasons on Earth?", options:["Changing distance from the Sun","Earth's axial tilt and revolution","Moon phases","Daily rotation only"], a:1, why:"The tilt changes sunlight angle and day length during Earth's orbit."},
+      {q:"What mainly causes the seasons on Earth?", options:["Changing distance from the Sun","Earth's tilt as it orbits the Sun","Moon phases","Earth's daily rotation"], a:1, why:"Earth's tilt changes the angle of sunlight and the length of each day as Earth travels around the Sun."},
       {q:"A torch changes electrical energy mainly into which outputs?", options:["Light and thermal","Chemical and nuclear","Elastic and sound","Gravitational and magnetic"], a:0, why:"Light is useful output and some energy is dissipated as heat."},
       {q:"Which heat-transfer process can travel through empty space?", options:["Conduction","Convection","Radiation","Evaporation"], a:2, why:"Electromagnetic radiation does not need particles."},
       {q:"A machine receives 200 J and produces 50 J useful output. What is its efficiency?", options:["4%","25%","50%","75%"], a:1, why:"50 ÷ 200 × 100 = 25%."},
