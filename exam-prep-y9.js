@@ -12,24 +12,24 @@ window.Y9ExamPrep = (() => {
       q("A student changes light level and measures plant height. What is the dependent variable?", ["Light level", "Plant height", "Plant type", "Pot size"], 1, "Plant height is measured in response to the changed light level."),
       q("Which change would most improve the reliability of a dissolving investigation?", ["Use a different beaker each time", "Repeat each test and calculate a mean", "Write a longer aim", "Change two variables"], 1, "Repeated measurements and a mean reduce the influence of random variation."),
       q("One result is very different from all the others. What is it called?", ["A control", "An anomaly", "A hypothesis", "A conclusion"], 1, "An anomalous result does not fit the overall pattern."),
-      q("Which graph is usually best for temperature measured every minute?", ["Pie chart", "Bar graph", "Line graph", "Pictogram"], 2, "Time and temperature are continuous variables, so a line graph shows the changing pattern."),
-      q("What should a useful scientific hypothesis include?", ["A prediction linked to science", "Only the equipment list", "The final result", "A colourful diagram"], 0, "A hypothesis predicts the relationship between variables and should be scientifically reasoned."),
+      q("Which graph is best for showing temperature measured every minute?", ["Pie chart", "Bar graph", "Line graph", "Pictogram"], 2, "A line graph clearly shows how temperature changes over time."),
+      q("What should a useful scientific hypothesis include?", ["A prediction with a science reason", "Only the equipment list", "The final result", "A colourful diagram"], 0, "A hypothesis predicts how one variable may affect another and gives a science reason."),
       q("Why are control variables kept the same?", ["To make the graph larger", "To make the test fair", "To guarantee the hypothesis is right", "To remove the dependent variable"], 1, "Keeping other factors constant lets the independent variable be tested fairly."),
       q("Which graph feature is essential on both axes?", ["A photograph", "A label and unit where needed", "A written conclusion", "A hazard symbol"], 1, "Axis labels identify each variable, and units show how numerical values were measured."),
-      q("A set of measurements is tightly grouped but far from the accepted value. It is...", ["accurate and precise", "accurate but not precise", "precise but not accurate", "neither measured nor recorded"], 2, "Precision is closeness between repeated values; accuracy is closeness to the accepted value."),
-      q("Which statement is an inference rather than an observation?", ["The liquid is blue", "The volume is 20 mL", "A gas is being produced because bubbles formed", "The thermometer reads 35 °C"], 2, "An inference explains an observation; it is not directly measured or seen."),
-      q("What belongs in the discussion or evaluation of an investigation?", ["Only the title", "Limitations and realistic improvements", "A new unrelated question", "The student's name only"], 1, "Evaluation considers evidence quality, limitations and specific improvements."),
+      q("A student repeats a measurement. The readings are close together, but they are not close to the correct value. Which statement is true?", ["The readings are accurate and precise", "The readings are accurate but not precise", "The readings are precise but not accurate", "The readings were not measured"], 2, "The readings are precise because they are close together. They are not accurate because they are not close to the correct value."),
+      q("Which sentence is an inference?", ["The liquid is blue", "The volume is 20 mL", "Bubbles formed, so a gas may have been produced", "The thermometer reads 35 °C"], 2, "An inference is an explanation based on an observation. It is not something measured directly."),
+      q("What should a student include when evaluating an investigation?", ["Only the title", "A problem with the method and a useful improvement", "A new unrelated question", "Only their name"], 1, "An evaluation identifies a specific problem and explains how the method could be improved."),
     ],
     wai: [
       q("How are particles arranged in a solid?", ["Far apart and moving freely", "Close together in fixed positions", "Close together and flowing past each other", "With no movement at all"], 1, "Solid particles are closely packed and vibrate about fixed positions."),
       q("What is the change from liquid water to water vapour called?", ["Freezing", "Condensation", "Evaporation", "Melting"], 2, "During evaporation, higher-energy liquid particles escape into the gas state."),
       q("What happens to particles when water freezes?", ["They gain energy and spread out", "They lose energy and become fixed in an arrangement", "They turn into new atoms", "They disappear"], 1, "Cooling removes energy, so particles become fixed in the solid structure."),
-      q("Which pollutant most directly makes stream water cloudy and reduces light?", ["Sediment", "Dissolved oxygen", "Native plants", "Shade"], 0, "Suspended sediment increases turbidity and blocks light in the water."),
+      q("Which pollutant can make stream water cloudy and block light?", ["Sediment", "Dissolved oxygen", "Native plants", "Shade"], 0, "Small pieces of sediment stay suspended in the water, making it cloudy and blocking light."),
       q("Why can high water temperature be harmful to stream organisms?", ["Warm water always freezes", "Warm water can hold less dissolved oxygen", "It creates new elements", "It removes all nutrients"], 1, "As water warms, its capacity to hold dissolved oxygen generally decreases."),
       q("Which observation is evidence of a physical change?", ["A new substance forms", "Ice melts but remains H₂O", "An atom becomes another element", "A gas burns to form products"], 1, "Melting changes state and particle arrangement, but the substance remains water."),
       q("What is an atom?", ["The smallest particle of an element", "A mixture of several substances", "Only a water particle", "A visible droplet"], 0, "An atom is the smallest particle that retains the identity of an element."),
       q("Which action best demonstrates kaitiakitanga for local wai?", ["Leaving rubbish beside a stream", "Monitoring water quality and restoring stream banks", "Removing all stream plants", "Sending stormwater straight to the river"], 1, "Caring for wai includes gathering evidence and taking action to protect its mauri."),
-      q("During boiling, where does vaporisation occur?", ["Only at the surface", "Throughout the liquid", "Only inside ice", "Nowhere in the liquid"], 1, "Boiling produces vapour bubbles throughout the liquid; evaporation occurs at the surface."),
+      q("When water boils, where do water-vapour bubbles form?", ["Only at the surface", "Throughout the liquid", "Only inside ice", "They do not form"], 1, "During boiling, water-vapour bubbles form throughout the liquid. Evaporation happens only at the surface."),
       q("Which sequence shows the water cycle correctly after evaporation?", ["Condensation, precipitation, collection", "Freezing, melting, burning", "Collection, evaporation, no condensation", "Precipitation, photosynthesis, radiation"], 0, "Water vapour condenses, falls as precipitation and collects before cycling again."),
     ],
     living: [
@@ -59,7 +59,7 @@ window.Y9ExamPrep = (() => {
   function html() {
     return `<div class="y9-exam-page">
       <section class="y9-exam-hero">
-        <div class="y9-exam-hero-copy"><p class="y9-overline">End-of-year exam preparation</p><h1>Train the science. Not the test.</h1><p>Build secure knowledge across the whole Year 9 course, then apply it to fresh questions. Nothing here copies the end-of-year exam.</p>
+        <div class="y9-exam-hero-copy"><p class="y9-overline">End-of-year exam preparation</p><h1>Practise the science you have learned.</h1><p>Revise one topic at a time, then try fresh mixed questions. The questions practise the same skills without copying the end-of-year exam.</p>
           <div class="y9-exam-stats"><span><strong>100</strong> marked questions</span><span><strong>24</strong> per full set</span><span><strong>6</strong> written responses</span></div>
         </div>
       </section>
@@ -69,7 +69,7 @@ window.Y9ExamPrep = (() => {
         <button type="button" data-y9-jump="y9-full"><span>3</span><strong>Full practice</strong><small>24 + 6 questions</small></button>
       </nav>
 
-      <section class="y9-exam-section" id="y9-plan"><header><p class="y9-overline">Step 1 · Plan</p><h2>Turn the course into a revision plan</h2><p>Tick a checkpoint only when you can explain it without notes. Your choices stay on this device.</p></header>
+      <section class="y9-exam-section" id="y9-plan"><header><p class="y9-overline">Step 1 · Plan</p><h2>Choose what to revise</h2><p>Tick a topic when you can explain it without using your notes. Your choices stay on this device.</p></header>
         <div class="y9-plan-grid">
           ${planCard("nature","Science skills","Safety, measurement, variables, fair tests and graphs",0)}
           ${planCard("wai","Precious Wai","Wai as taonga, particles, state changes and water quality",1)}
@@ -77,19 +77,20 @@ window.Y9ExamPrep = (() => {
           ${planCard("living","Plants and ecosystems","Photosynthesis, reproduction, adaptations and food webs",3)}
           ${planCard("space-energy","Space cycles","The solar system, seasons, Moon phases and eclipses",4)}
           ${planCard("space-energy","Energy and waves","Transfers, heating, efficiency, sound, light and the eye",5)}
-          ${planCard("exam","Mixed retrieval","Complete a Test-mode set without notes",6)}
+          ${planCard("exam","Mixed practice","Complete one Test-mode set without notes",6)}
         </div>
         <div class="y9-plan-progress"><div><strong id="y9-plan-count">0 of 7 secure</strong><span>Keep moving—confidence grows through retrieval.</span></div><progress id="y9-plan-progress" max="7" value="0">0 of 7</progress></div>
       </section>
 
-      <section class="y9-exam-section y9-sharpen" id="y9-sharpen"><header><p class="y9-overline">Step 2 · Sharpen</p><h2>Practise the moves that earn marks</h2><p>Use these short tools before the full mixed set.</p></header>
+      <section class="y9-exam-section y9-sharpen" id="y9-sharpen"><header><p class="y9-overline">Step 2 · Sharpen</p><h2>Practise one skill at a time</h2><p>Use these short tools before you begin the full mixed set.</p></header>
         <div class="y9-skill-grid">
           <article class="y9-tool-card"><div class="y9-tool-top"><span>Calculation lab</span><button type="button" class="y9-text-button" id="y9-new-calc">New question</button></div><h3 id="y9-calc-question"></h3><label for="y9-calc-answer">Your answer <span id="y9-calc-unit"></span></label><div class="y9-answer-row"><input id="y9-calc-answer" inputmode="decimal"><button type="button" class="button" id="y9-check-calc">Check</button></div><div class="y9-feedback neutral" id="y9-calc-feedback" aria-live="polite">Show your working, then check.</div></article>
           <article class="y9-tool-card"><div class="y9-tool-top"><span>Command-word coach</span><button type="button" class="y9-text-button" id="y9-next-command">Next</button></div><p class="y9-command" id="y9-command-word"></p><h3 id="y9-command-prompt"></h3><button type="button" class="button secondary-dark" id="y9-reveal-command">Reveal a strong response</button><div class="y9-feedback neutral" id="y9-command-feedback" aria-live="polite">Say or write your response before revealing the example.</div></article>
         </div>
+        <article class="y9-topic-tool"><div><p class="y9-overline">Five-question topic trainer</p><h3>Choose one area to practise</h3><p>You will get an explanation after every answer. Try the area again to receive different questions.</p></div><div class="y9-topic-buttons">${Object.entries(AREA_META).map(([slug,item])=>`<button type="button" data-y9-topic="${slug}" style="--area:${item.colour}">${item.short}</button>`).join("")}</div><div id="y9-topic-stage" class="y9-topic-stage"><p>Choose a topic to begin.</p></div></article>
       </section>
 
-      <section class="y9-exam-section" id="y9-full"><header><p class="y9-overline">Step 3 · Full practice</p><h2>A bigger, balanced practice session</h2><p>Every set contains six fresh questions from each learning area, followed by six written responses. Recently used questions are held back.</p></header>
+      <section class="y9-exam-section" id="y9-full"><header><p class="y9-overline">Step 3 · Full practice</p><h2>Try a full mixed practice</h2><p>Each set has six questions from every learning area. After the marked questions, complete six written responses. Recently used questions are held back.</p></header>
         <div class="y9-bank-summary">${Object.entries(AREA_META).map(([key,a])=>`<div style="--area:${a.colour}"><strong>25</strong><span>${a.short}</span></div>`).join("")}</div>
         <div id="y9-practice-app" class="y9-practice-app">
           <div class="y9-mode-picker"><h3>Choose how feedback works</h3><div class="y9-mode-grid">
@@ -111,6 +112,7 @@ window.Y9ExamPrep = (() => {
     initPlan();
     initCalculator();
     initCommandCoach();
+    initTopicTrainer();
     document.querySelectorAll("[data-y9-mode]").forEach(button => button.addEventListener("click", () => startSession(button.dataset.y9Mode)));
   }
 
@@ -156,6 +158,35 @@ window.Y9ExamPrep = (() => {
   }
 
   function setFeedback(id, type, text) { const el=document.getElementById(id); if(!el)return; el.className=`y9-feedback ${type}`; el.textContent=text; }
+
+  let topicSession;
+  function initTopicTrainer() {
+    document.querySelectorAll("[data-y9-topic]").forEach(button=>button.addEventListener("click",()=>startTopicTrainer(button.dataset.y9Topic)));
+  }
+  function startTopicTrainer(slug) {
+    topicSession={slug,items:shuffle(bank()[slug]).slice(0,5),index:0,score:0};
+    renderTopicQuestion();
+  }
+  function renderTopicQuestion() {
+    const stage=document.getElementById("y9-topic-stage"), item=topicSession.items[topicSession.index], meta=AREA_META[topicSession.slug];
+    if(!item){
+      stage.innerHTML=`<div class="y9-topic-finish"><strong>${topicSession.score}/5</strong><p>${topicSession.score>=4?"Strong work. Try another area or repeat this one with fresh questions.":"Read the explanations, open the revision page, then try this area again."}</p><button type="button" class="button" data-y9-topic-retry>Try ${meta.short} again</button></div>`;
+      stage.querySelector("[data-y9-topic-retry]").addEventListener("click",()=>startTopicTrainer(topicSession.slug));
+      return;
+    }
+    stage.innerHTML=`<div class="y9-topic-head"><span>${meta.short}</span><strong>Question ${topicSession.index+1} of 5</strong></div><h4>${esc(item.q)}</h4><div class="y9-options">${item.options.map((option,i)=>`<button type="button" data-y9-topic-answer="${i}"><span>${String.fromCharCode(65+i)}</span>${esc(option)}</button>`).join("")}</div><div id="y9-topic-feedback" class="y9-feedback neutral" aria-live="polite">Choose one answer.</div><button type="button" class="button y9-topic-next" hidden>Next question</button>`;
+    const buttons=[...stage.querySelectorAll("[data-y9-topic-answer]")], feedback=stage.querySelector("#y9-topic-feedback"), next=stage.querySelector(".y9-topic-next");
+    buttons.forEach(button=>button.addEventListener("click",()=>{
+      if(buttons.some(item=>item.disabled))return;
+      const choice=Number(button.dataset.y9TopicAnswer),correct=choice===item.a;
+      if(correct)topicSession.score++;
+      buttons.forEach((option,i)=>{option.disabled=true;option.classList.toggle("right",i===item.a);option.classList.toggle("wrong",i===choice&&!correct);});
+      feedback.className=`y9-feedback ${correct?"correct":"incorrect"}`;
+      feedback.textContent=`${correct?"Correct.":"Not yet."} ${item.why}`;
+      next.hidden=false;
+    }));
+    next.addEventListener("click",()=>{topicSession.index++;renderTopicQuestion();});
+  }
 
   function bank() {
     const result={};
@@ -222,12 +253,12 @@ window.Y9ExamPrep = (() => {
   function resultMessage(score,total) { const pct=total?score/total:0; return pct>=.8?"Secure retrieval. Use the review and written responses to deepen explanations.":pct>=.6?"A useful base. Review the explanations, then target the weakest area.":"This set has found useful gaps. Revisit the linked learning pages, then try a fresh set."; }
 
   const written=[
-    {area:"Nature of Science",prompt:"A student investigates how water temperature affects the time taken for sugar to dissolve. Identify the independent variable, dependent variable and one control variable. Explain why the control matters.",model:"Independent variable: water temperature. Dependent variable: dissolving time. A suitable control is the mass of sugar, volume of water or stirring method. Keeping it the same makes the test fair, so changes in dissolving time can be linked to temperature."},
-    {area:"Precious Wai",prompt:"Explain, using the particle model, what happens when liquid water boils.",model:"Heating transfers energy to water particles, so they move faster. At boiling point, particles have enough energy to overcome attractions and separate throughout the liquid, forming water vapour. The particles remain H₂O; no new substance forms."},
-    {area:"Living World",prompt:"Compare a plant cell with an animal cell, including two similarities and two differences.",model:"Both have a cell membrane, cytoplasm, nucleus and mitochondria. A plant cell also has a cellulose cell wall, chloroplasts and usually a large permanent vacuole. Animal cells do not have a cell wall or chloroplasts."},
-    {area:"Living World",prompt:"Predict what may happen to a hawk population if the mouse population in its food web decreases. Explain your reasoning using energy transfer.",model:"The hawk population may decrease because fewer mice means less prey and therefore less chemical energy transferred to hawks. Competition for the remaining food may increase. Other links in the food web could reduce or delay the effect."},
-    {area:"Space & Energy",prompt:"Explain why New Zealand has warmer weather and longer days in summer. Do not say Earth is closer to the Sun.",model:"Earth's axis is tilted. During New Zealand summer, the Southern Hemisphere tilts toward the Sun, so sunlight is more direct and the Sun stays above the horizon longer. More energy is received per square metre and for more hours each day."},
-    {area:"Space & Energy",prompt:"A device receives 800 J of energy and transfers 600 J usefully in 4 seconds. Calculate its efficiency and the power of the useful transfer. Show formulas, working and units.",model:"Efficiency = useful ÷ input × 100 = 600 ÷ 800 × 100 = 75%. Power = energy ÷ time = 600 J ÷ 4 s = 150 W."}
+    {area:"Nature of Science",prompt:"A student changes the water temperature and measures how long sugar takes to dissolve. (a) State the independent variable. (b) State the dependent variable. (c) Name one variable that must stay the same. (d) Explain why it must stay the same.",model:"(a) Water temperature. (b) Time taken for the sugar to dissolve. (c) The mass of sugar, volume of water or stirring method. (d) Keeping it the same makes the test fair, so temperature is the only factor causing a change."},
+    {area:"Precious Wai",prompt:"Use the particle model to explain what happens when water boils. Include energy, movement and spacing in your answer.",model:"Heating gives the water particles more energy, so they move faster. At the boiling point, particles move far apart and form water vapour throughout the liquid. They are still H₂O particles; no new substance is made."},
+    {area:"Living World",prompt:"Compare a plant cell and an animal cell. Give two structures found in both cells. Then give two structures found in a plant cell but not a typical animal cell.",model:"Both cells have a cell membrane, cytoplasm, nucleus and mitochondria. Plant cells also have a cell wall, chloroplasts and a large vacuole. Any two correct structures from each part earn the marks."},
+    {area:"Living World",prompt:"The number of mice in a food web decreases. Predict what may happen to the hawk population. Explain why.",model:"The hawk population may decrease because there are fewer mice to eat. This means less food and less energy are available to the hawks."},
+    {area:"Space & Energy",prompt:"Explain why New Zealand has longer days and warmer weather in summer. Use Earth's tilt and sunlight in your answer.",model:"Earth's axis is tilted. During New Zealand summer, the Southern Hemisphere tilts toward the Sun. Sunlight is more direct, and the Sun stays above the horizon for longer. This gives the surface more energy."},
+    {area:"Space & Energy",prompt:"A device receives 800 J of energy. It transfers 600 J usefully in 4 seconds. (a) Calculate the efficiency. (b) Calculate the power of the useful transfer. Show the formula, working and unit for each answer.",model:"(a) Efficiency = useful energy ÷ input energy × 100 = 600 ÷ 800 × 100 = 75%. (b) Power = energy ÷ time = 600 J ÷ 4 s = 150 W."}
   ];
   function renderWritten() {
     const target=document.getElementById("y9-practice-app");
