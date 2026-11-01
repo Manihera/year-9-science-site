@@ -137,9 +137,7 @@ window.Y9ExamPrep = (() => {
     () => { const time=pick([2,4,5,10,15,20]), power=pick([20,30,40,50,100]); return {prompt:`A device transfers ${time*power} J of energy. Its power is ${power} W. How long does it take?`,answer:time,unit:"s",working:`Time = Energy ÷ Power = ${time*power} ÷ ${power} = ${time} s`}; },
     () => { const input=pick([100,200,400,500]), pct=pick([20,25,50,75,80]); return {prompt:`A device receives ${input} J and transfers ${input*pct/100} J usefully. What is its efficiency?`,answer:pct,unit:"%",working:`Efficiency = Useful energy ÷ Total energy × 100 = ${input*pct/100} ÷ ${input} × 100 = ${pct}%`}; },
     () => { const input=pick([100,200,400,500]),pct=pick([20,25,50,75]); return {prompt:`A device receives ${input} J of energy and is ${pct}% efficient. How much useful energy does it transfer?`,answer:input*pct/100,unit:"J",working:`Useful energy = Total energy × Efficiency ÷ 100 = ${input} × ${pct} ÷ 100 = ${input*pct/100} J`}; },
-    () => { const mean=pick([5,7,10,12,15]),gap=pick([1,2,3]);return {prompt:`A student measures ${mean-gap}, ${mean} and ${mean+gap} cm in three trials. What is the mean (average)?`,answer:mean,unit:"cm",working:`Mean = (${mean-gap} + ${mean} + ${mean+gap}) ÷ 3 = ${mean} cm`}; },
     () => { const first=pick([50,60,70,80]),drop=pick([5,10,15,20]);return {prompt:`Water cools from ${first}°C to ${first-drop}°C. How much did its temperature decrease?`,answer:drop,unit:"°C",working:`Temperature decrease = ${first} − ${first-drop} = ${drop}°C`}; },
-    () => { const time=pick([2,3,4,5]),freq=pick([2,3,4,5,6]);return {prompt:`${freq*time} waves pass a point in ${time} seconds. What is their frequency?`,answer:freq,unit:"Hz",working:`Frequency = Number of waves ÷ Time = ${freq*time} ÷ ${time} = ${freq} Hz`}; }
   ];
   let currentCalc;
   function initCalculator() {
