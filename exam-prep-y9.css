@@ -120,3 +120,8 @@
 }
 @media (max-width:410px) { .y9-bank-summary,.y9-breakdown { grid-template-columns:1fr; } .y9-answer-row { align-items:stretch; flex-direction:column; } }
 @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+
+/* Expanded topic trainer progress */
+.y9-topic-meter{height:8px;overflow:hidden;border-radius:999px;background:#e8e3da;margin:.8rem 0 1.2rem}
+.y9-topic-meter>span{display:block;height:100%;background:#9f171b;border-radius:999px;transition:width .2s}
+.y9-topic-stage{max-width:100%;min-width:0}
