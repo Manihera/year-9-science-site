@@ -87,7 +87,7 @@ window.Y9ExamPrep = (() => {
           <article class="y9-tool-card"><div class="y9-tool-top"><span>Calculation lab</span><button type="button" class="y9-text-button" id="y9-new-calc">New question</button></div><h3 id="y9-calc-question"></h3><label for="y9-calc-answer">Your answer <span id="y9-calc-unit"></span></label><div class="y9-answer-row"><input id="y9-calc-answer" inputmode="decimal"><button type="button" class="button" id="y9-check-calc">Check</button></div><div class="y9-feedback neutral" id="y9-calc-feedback" aria-live="polite">Show your working, then check.</div></article>
           <article class="y9-tool-card"><div class="y9-tool-top"><span>Command-word coach</span><button type="button" class="y9-text-button" id="y9-next-command">Next</button></div><p class="y9-command" id="y9-command-word"></p><h3 id="y9-command-prompt"></h3><button type="button" class="button secondary-dark" id="y9-reveal-command">Reveal a strong response</button><div class="y9-feedback neutral" id="y9-command-feedback" aria-live="polite">Say or write your response before revealing the example.</div></article>
         </div>
-        <article class="y9-topic-tool"><div><p class="y9-overline">Five-question topic trainer</p><h3>Choose one area to practise</h3><p>You will get an explanation after every answer. Try the area again to receive different questions.</p></div><div class="y9-topic-buttons">${Object.entries(AREA_META).map(([slug,item])=>`<button type="button" data-y9-topic="${slug}" style="--area:${item.colour}">${item.short}</button>`).join("")}</div><div id="y9-topic-stage" class="y9-topic-stage"><p>Choose a topic to begin.</p></div></article>
+        <article class="y9-topic-tool"><div><p class="y9-overline">Topic question trainer</p><h3>Choose one area to practise</h3><p>You will get an explanation after every answer. Work through all 25 questions in each area. You can stop and come back to practise again.</p></div><div class="y9-topic-buttons">${Object.entries(AREA_META).map(([slug,item])=>`<button type="button" data-y9-topic="${slug}" style="--area:${item.colour}">${item.short}</button>`).join("")}</div><div id="y9-topic-stage" class="y9-topic-stage"><p>Choose a topic to begin.</p></div></article>
       </section>
 
       <section class="y9-exam-section" id="y9-full"><header><p class="y9-overline">Step 3 · Full practice</p><h2>Try a full mixed practice</h2><p>Each set has six questions from every learning area. After the marked questions, complete six written responses. Recently used questions are held back.</p></header>
@@ -164,17 +164,17 @@ window.Y9ExamPrep = (() => {
     document.querySelectorAll("[data-y9-topic]").forEach(button=>button.addEventListener("click",()=>startTopicTrainer(button.dataset.y9Topic)));
   }
   function startTopicTrainer(slug) {
-    topicSession={slug,items:shuffle(bank()[slug]).slice(0,5),index:0,score:0};
+    topicSession={slug,items:shuffle(bank()[slug]),index:0,score:0};
     renderTopicQuestion();
   }
   function renderTopicQuestion() {
     const stage=document.getElementById("y9-topic-stage"), item=topicSession.items[topicSession.index], meta=AREA_META[topicSession.slug];
     if(!item){
-      stage.innerHTML=`<div class="y9-topic-finish"><strong>${topicSession.score}/5</strong><p>${topicSession.score>=4?"Strong work. Try another area or repeat this one with fresh questions.":"Read the explanations, open the revision page, then try this area again."}</p><button type="button" class="button" data-y9-topic-retry>Try ${meta.short} again</button></div>`;
+      stage.innerHTML=`<div class="y9-topic-finish"><strong>${topicSession.score}/${topicSession.items.length}</strong><p>${topicSession.score/topicSession.items.length>=0.8?"Strong work. Try another area or repeat this one with fresh questions.":"Read the explanations, open the revision page, then try this area again."}</p><button type="button" class="button" data-y9-topic-retry>Try ${meta.short} again</button></div>`;
       stage.querySelector("[data-y9-topic-retry]").addEventListener("click",()=>startTopicTrainer(topicSession.slug));
       return;
     }
-    stage.innerHTML=`<div class="y9-topic-head"><span>${meta.short}</span><strong>Question ${topicSession.index+1} of 5</strong></div><h4>${esc(item.q)}</h4><div class="y9-options">${item.options.map((option,i)=>`<button type="button" data-y9-topic-answer="${i}"><span>${String.fromCharCode(65+i)}</span>${esc(option)}</button>`).join("")}</div><div id="y9-topic-feedback" class="y9-feedback neutral" aria-live="polite">Choose one answer.</div><button type="button" class="button y9-topic-next" hidden>Next question</button>`;
+    stage.innerHTML=`<div class="y9-topic-head"><span>${meta.short}</span><strong>Question ${topicSession.index+1} of ${topicSession.items.length}</strong></div><div class="y9-topic-meter"><span style="width:${Math.round(topicSession.index/topicSession.items.length*100)}%"></span></div><h4>${esc(item.q)}</h4><div class="y9-options">${item.options.map((option,i)=>`<button type="button" data-y9-topic-answer="${i}"><span>${String.fromCharCode(65+i)}</span>${esc(option)}</button>`).join("")}</div><div id="y9-topic-feedback" class="y9-feedback neutral" aria-live="polite">Choose one answer.</div><button type="button" class="button y9-topic-next" hidden>Next question</button>`;
     const buttons=[...stage.querySelectorAll("[data-y9-topic-answer]")], feedback=stage.querySelector("#y9-topic-feedback"), next=stage.querySelector(".y9-topic-next");
     buttons.forEach(button=>button.addEventListener("click",()=>{
       if(buttons.some(item=>item.disabled))return;
