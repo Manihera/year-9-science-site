@@ -130,16 +130,22 @@ window.Y9ExamPrep = (() => {
     update();
   }
 
+  const pick = values => values[Math.floor(Math.random()*values.length)];
   const calculators = [
-    () => { const eye=[5,10][Math.floor(Math.random()*2)], obj=[4,10,40][Math.floor(Math.random()*3)]; return {prompt:`A microscope has a ×${eye} eyepiece and a ×${obj} objective. Calculate total magnification.`,answer:eye*obj,unit:"×",working:`${eye} × ${obj} = ${eye*obj}`}; },
-    () => { const time=[2,3,4,5][Math.floor(Math.random()*4)], power=[20,30,40,50][Math.floor(Math.random()*4)]; return {prompt:`A device transfers ${time*power} J in ${time} s. Calculate its power.`,answer:power,unit:"W",working:`P = E ÷ t = ${time*power} ÷ ${time} = ${power} W`}; },
-    () => { const input=[100,200,400,500][Math.floor(Math.random()*4)], pct=[20,25,50,75][Math.floor(Math.random()*4)]; return {prompt:`A device receives ${input} J and transfers ${input*pct/100} J usefully. Calculate efficiency.`,answer:pct,unit:"%",working:`efficiency = useful ÷ input × 100 = ${input*pct/100} ÷ ${input} × 100 = ${pct}%`}; }
+    () => { const time=pick([2,3,4,5,10,20]), power=pick([20,30,40,50,60,100]); return {prompt:`A device transfers ${time*power} J of energy in ${time} seconds. What is its power?`,answer:power,unit:"W",working:`Power = Energy ÷ Time = ${time*power} ÷ ${time} = ${power} W`}; },
+    () => { const time=pick([3,5,10,20,30]), power=pick([10,20,40,60,100]); return {prompt:`A ${power} W device runs for ${time} seconds. How much energy does it transfer?`,answer:power*time,unit:"J",working:`Energy = Power × Time = ${power} × ${time} = ${power*time} J`}; },
+    () => { const time=pick([2,4,5,10,15,20]), power=pick([20,30,40,50,100]); return {prompt:`A device transfers ${time*power} J of energy. Its power is ${power} W. How long does it take?`,answer:time,unit:"s",working:`Time = Energy ÷ Power = ${time*power} ÷ ${power} = ${time} s`}; },
+    () => { const input=pick([100,200,400,500]), pct=pick([20,25,50,75,80]); return {prompt:`A device receives ${input} J and transfers ${input*pct/100} J usefully. What is its efficiency?`,answer:pct,unit:"%",working:`Efficiency = Useful energy ÷ Total energy × 100 = ${input*pct/100} ÷ ${input} × 100 = ${pct}%`}; },
+    () => { const input=pick([100,200,400,500]),pct=pick([20,25,50,75]); return {prompt:`A device receives ${input} J of energy and is ${pct}% efficient. How much useful energy does it transfer?`,answer:input*pct/100,unit:"J",working:`Useful energy = Total energy × Efficiency ÷ 100 = ${input} × ${pct} ÷ 100 = ${input*pct/100} J`}; },
+    () => { const mean=pick([5,7,10,12,15]),gap=pick([1,2,3]);return {prompt:`A student measures ${mean-gap}, ${mean} and ${mean+gap} cm in three trials. What is the mean (average)?`,answer:mean,unit:"cm",working:`Mean = (${mean-gap} + ${mean} + ${mean+gap}) ÷ 3 = ${mean} cm`}; },
+    () => { const first=pick([50,60,70,80]),drop=pick([5,10,15,20]);return {prompt:`Water cools from ${first}°C to ${first-drop}°C. How much did its temperature decrease?`,answer:drop,unit:"°C",working:`Temperature decrease = ${first} − ${first-drop} = ${drop}°C`}; },
+    () => { const time=pick([2,3,4,5]),freq=pick([2,3,4,5,6]);return {prompt:`${freq*time} waves pass a point in ${time} seconds. What is their frequency?`,answer:freq,unit:"Hz",working:`Frequency = Number of waves ÷ Time = ${freq*time} ÷ ${time} = ${freq} Hz`}; }
   ];
   let currentCalc;
   function initCalculator() {
     const next = () => { currentCalc = calculators[Math.floor(Math.random()*calculators.length)](); document.getElementById("y9-calc-question").textContent=currentCalc.prompt; document.getElementById("y9-calc-unit").textContent=`(${currentCalc.unit})`; document.getElementById("y9-calc-answer").value=""; setFeedback("y9-calc-feedback","neutral","Show your working, then check."); };
     document.getElementById("y9-new-calc")?.addEventListener("click",next);
-    document.getElementById("y9-check-calc")?.addEventListener("click",()=>{ const value=Number(document.getElementById("y9-calc-answer").value); Number.isFinite(value)&&Math.abs(value-currentCalc.answer)<0.001 ? setFeedback("y9-calc-feedback","correct",`Correct. ${currentCalc.working}`) : setFeedback("y9-calc-feedback","incorrect",`Not yet. Use the formula, substitute the values, then include the unit. ${currentCalc.working}`); });
+    document.getElementById("y9-check-calc")?.addEventListener("click",()=>{ const raw=document.getElementById("y9-calc-answer").value.trim(); const value=Number(raw); raw!==""&&Number.isFinite(value)&&Math.abs(value-currentCalc.answer)<0.001 ? setFeedback("y9-calc-feedback","correct",`Correct. ${currentCalc.working}`) : setFeedback("y9-calc-feedback","incorrect",`Not yet. Use the formula, substitute the values, then include the unit. ${currentCalc.working}`); });
     next();
   }
 
