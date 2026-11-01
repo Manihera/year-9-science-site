@@ -393,3 +393,29 @@ footer p { margin: .2rem; }
   .progress-heading { padding: 1rem; color: black; background: white; }
   .progress-card { break-inside: avoid; box-shadow: none; border: 1px solid #aaa; }
 }
+
+/* Focused Year 9 revision layout */
+.revision-guide{padding:1.1rem 1.3rem;margin-bottom:1.15rem;background:#fff;border-left:5px solid var(--red);box-shadow:var(--shadow)}
+.revision-guide strong{display:block;font-size:1.15rem}.revision-guide p{margin:.2rem 0 0;color:var(--ink-soft)}
+.revision-activity{margin:0 0 1rem;background:#fff;border:1px solid #dedbd5;border-radius:12px;overflow:hidden;box-shadow:0 5px 20px rgba(0,0,0,.055)}
+.revision-activity>summary{display:flex;align-items:center;gap:1rem;list-style:none;padding:1rem 1.3rem;cursor:pointer;background:#fff}
+.revision-activity>summary::-webkit-details-marker{display:none}
+.revision-activity>summary:hover,.revision-activity>summary:focus-visible{background:#f7f2e9}
+.revision-activity>summary>span:nth-child(2){flex:1;min-width:0}
+.revision-activity>summary strong,.revision-activity>summary small{display:block}
+.revision-activity>summary strong{font-size:1.15rem;color:#182333}
+.revision-activity>summary small{color:#606875;font-size:.85rem;margin-top:.2rem}
+.revision-step{display:grid;place-items:center;min-width:2.7rem;height:2.7rem;border-radius:50%;background:#f5e8e4;color:#8d1719;font-weight:900}
+.revision-chevron{font-size:1.8rem;transition:transform .2s}.revision-activity[open] .revision-chevron{transform:rotate(180deg)}
+.revision-activity-body{padding:0 1.3rem 1.3rem;border-top:1px solid #ece7de}
+.revision-activity-body>.learning-section{margin:0;padding:1.3rem 0 0;box-shadow:none;background:transparent}
+.revision-activity-body .quiz-question{min-width:0;margin:0 0 1rem;padding:1rem!important;border:1px solid #e3e0db!important;border-radius:10px;background:#fff}
+.revision-activity-body .quiz-question legend{display:block;float:left;width:100%;padding:0 0 .65rem;margin:0}
+.revision-activity-body .quiz-question legend h3{font-size:1rem;line-height:1.45;margin:0}
+.revision-activity-body .quiz-question legend+label{clear:both}
+.revision-activity-body .quiz-option{display:flex;align-items:center;gap:.75rem;padding:.7rem .8rem!important;margin:.35rem 0;border-radius:8px;background:#f7f7f6;cursor:pointer;line-height:1.4}
+.revision-activity-body .quiz-option:hover{background:#f2ebe4}
+.revision-activity-body .quiz-option input{flex:none;margin:0;width:1.1rem;height:1.1rem}
+.revision-activity-body .quiz-option span{flex:1;min-width:0}
+.revision-activity-body .practice-list details,.revision-activity-body .bank-grid details{border-radius:8px;overflow:hidden}
+@media(max-width:600px){.revision-activity>summary{padding:.85rem}.revision-activity-body{padding:0 .8rem .8rem}.revision-activity-body .quiz-question{padding:.7rem!important}.revision-step{min-width:2.2rem;height:2.2rem}}
